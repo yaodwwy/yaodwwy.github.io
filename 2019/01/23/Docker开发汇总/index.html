@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="个人技术研究站">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+    
+  <title>Docker开发汇总 | Adam&#39;s byte</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class="logo" href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/new" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+</header>
+
+  <main id="post">
+    <div class="content">
+        <article>
+            <section class="content markdown-body">
+                <h1>Docker开发汇总</h1>
+                <div class="post-meta">
+                    <i class="fa fa-calendar" aria-hidden="true"></i> <time>2019年01月23日</time>
+                    
+                    
+                    | 
+                    <i class="fa fa-tag" aria-hidden="true"></i>
+                    
+                    
+  <a href="/tags/#Docker" class="tag">Docker</a>
+
+
+                    
+                </div>
+                <p>　　本篇针对Docker18.09.0常用开发，配置，环境搭建等使用细节汇总。</p>
+<h3 id="环境说明"><a href="#环境说明" class="headerlink" title="环境说明"></a>环境说明</h3><p><a href="http://www.adbyte.cn/2018/12/12/CentOS-7-Minimal%E5%BC%80%E5%8F%91%E6%B1%87%E6%80%BB/#Docker%E7%8E%AF%E5%A2%83%E7%AF%87" target="_blank">Docker环境安装</a></p>
+<pre><code># docker version
+Client:
+ Version:           18.09.0
+ API version:       1.39
+ Go version:        go1.10.4
+ Git commit:        4d60db4
+ Built:             Wed Nov  7 00:48:22 2018
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          18.09.0
+  API version:      1.39 (minimum version 1.12)
+  Go version:       go1.10.4
+  Git commit:       4d60db4
+  Built:            Wed Nov  7 00:19:08 2018
+  OS/Arch:          linux/amd64
+  Experimental:     false
+</code></pre><blockquote>
+<p>如果与此环境一至可以开启一场Docker之旅了!</p>
+</blockquote>
+<hr>
+<h3 id="系统配置篇"><a href="#系统配置篇" class="headerlink" title="系统配置篇"></a>系统配置篇</h3><blockquote>
+<p>开启远程管理Docker2375端口</p>
+<blockquote>
+<p>禁止公网未加密方式开放2375<br>必须使用TSL的HTTPS连接，不然就…</p>
+</blockquote>
+</blockquote>
+<p>   <a href="http://adbyte.cn/files/tlscert.sh" target="_blank" rel="noopener">证书生成脚本</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 给脚本添加运行权限</span></span><br><span class="line">chmod +x tlscert.sh</span><br><span class="line">HOST_IP=127.0.0.1</span><br><span class="line">./tlscert.sh <span class="variable">$HOST_IP</span></span><br><span class="line"><span class="comment"># 客户端需要的证书保存在client目录下, 服务端需要的证书保存在server目录下</span></span><br><span class="line">D_S=/usr/lib/systemd/system/docker.service</span><br><span class="line">sed -i <span class="string">'s|ExecStart=/usr/bin/dockerd -H unix://|EnvironmentFile=-/etc/default/docker\nExecStart=/usr/bin/dockerd  -H unix:// $DOCKER_OPTS|'</span> <span class="variable">$D_S</span></span><br><span class="line">grep ExecStart <span class="variable">$D_S</span></span><br><span class="line">grep EnvironmentFile <span class="variable">$D_S</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'DOCKER_OPTS="--selinux-enabled'</span> \</span><br><span class="line"><span class="string">'--tlsverify --tlscacert=/etc/docker/ca.pem'</span> \</span><br><span class="line"><span class="string">'--tlscert=/etc/docker/server-cert.pem'</span> \</span><br><span class="line"><span class="string">'--tlskey=/etc/docker/server-key.pem'</span> \</span><br><span class="line"><span class="string">'-H=unix:///var/run/docker.sock'</span> \</span><br><span class="line"><span class="string">'-H=0.0.0.0:2375"'</span> &gt; /etc/default/docker</span><br><span class="line">grep DOCKER_OPTS /etc/default/docker</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"******************  重启操作提示  ******************"</span></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+<p>复制脚本自动生成的client证书文件到客户端文件目录如IDEA</p>
+<p><img src="/img/idea-docker-Api.png" alt="Idea配置方式"><br><img src="/img/idea-dockerApi-pgsql.png" alt="Idea配置完成"></p>
+<hr>
+<h3 id="数据操作篇"><a href="#数据操作篇" class="headerlink" title="数据操作篇"></a>数据操作篇</h3><blockquote>
+<p>备份及恢复卷</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 挂载data并在data中新建测试文件</span></span><br><span class="line">docker run -it -v /data --name cow docker/whalesay</span><br><span class="line"><span class="built_in">echo</span> testFile &gt; /data/test.txt</span><br><span class="line"><span class="comment"># 新建容器并挂载测试卷并操作备份</span></span><br><span class="line">docker run -it --privileged=<span class="literal">true</span> --volumes-from cow -v $(<span class="built_in">pwd</span>):/backup --name temp docker/whalesay tar cvf /backup/backup.tar /data</span><br><span class="line"><span class="comment"># 新建容器并新建卷后操作恢复</span></span><br><span class="line">docker run -it --privileged=<span class="literal">true</span> -v /data -v $(<span class="built_in">pwd</span>):/backup --name cow2 docker/whalesay</span><br><span class="line"><span class="comment"># 解压backup目录下backup.tar到data/即可完成恢复</span></span><br><span class="line"><span class="built_in">cd</span> / &amp;&amp; tar -xvf /backup/backup.tar</span><br><span class="line"><span class="comment"># docker/whalesay 是一个很好玩的镜像,可以去pull下来试试</span></span><br></pre></td></tr></table></figure>
+<h3 id="容器部署篇"><a href="#容器部署篇" class="headerlink" title="容器部署篇"></a>容器部署篇</h3><h4 id="Docker-compose方式部署"><a href="#Docker-compose方式部署" class="headerlink" title="Docker-compose方式部署"></a>Docker-compose方式部署</h4>
+            </section>
+        </article>
+        
+        <!-- disqus 评论框 start -->
+        <div class="comment">
+            <div id="disqus_thread" class="disqus-thread">
+                <i>评论未能加载 DISQUS被屏蔽 请检查网络</i>
+            </div>
+        </div>
+        <!-- disqus 评论框 end -->
+        
+        
+    </div>
+        
+    <aside>
+        <div class="toc-container">
+            <h1>目录</h1>
+            <div class="content">
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境说明"><span class="toc-number">1.</span> <span class="toc-text">环境说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统配置篇"><span class="toc-number">2.</span> <span class="toc-text">系统配置篇</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据操作篇"><span class="toc-number">3.</span> <span class="toc-text">数据操作篇</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器部署篇"><span class="toc-number">4.</span> <span class="toc-text">容器部署篇</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker-compose方式部署"><span class="toc-number">4.1.</span> <span class="toc-text">Docker-compose方式部署</span></a></li></ol></li></ol>
+            </div>
+        </div>
+    </aside>
+        
+</main>
+
+<!-- disqus 公共JS代码 -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "adbyte-cn";
+    var disqus_identifier = "https://www.adbyte.cn/2019/01/23/Docker开发汇总/";
+    var disqus_url = "https://www.adbyte.cn/2019/01/23/Docker开发汇总/";
+
+    isAgent(getDisqus)
+
+    // determine user agent in China
+    function isAgent(cb) {
+        var url = '//graph.facebook.com/feed?callback=h';
+        var xhr = new XMLHttpRequest();
+        var called = false;
+        xhr.open('GET', url);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                called = true;
+                cb(true);
+            }
+        };
+        xhr.send();
+        // timeout 1s, this facebook API is very fast.
+        setTimeout(function() {
+            if (!called) {
+                xhr.abort();
+                cb(false)
+            }
+        }, 1000);
+    }
+
+    function getDisqus(isAgent) {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript';
+        dsq.async = true
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq)
+    }
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2018 adbyte.cn 苏ICP备17033525号-1 All Rights Reserved.
+      </p><p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+    <p></p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="/lib/in-view.min.js"></script>
+<script src="/lib/lodash.min.js"></script>
+<script>
+  var isDown = true
+  var oldY = 0
+  inView.offset(50)
+
+  document.body.addEventListener('touchstart', function(){});
+  
+  window.addEventListener('scroll', _.throttle(e => {
+    var currentY = window.scrollY
+    if((oldY - currentY) < 0) {
+      isDown = true
+    } else {
+      isDown = false
+    }
+    oldY = currentY
+  }, 250))
+
+  $("article img").each(function() {
+      var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+      $(this).wrapAll(strA);
+  });
+
+  $('.toc-link').each(function() {
+      var href = $(this).attr("href");
+      
+      inView(href).on('exit', () => {
+        if (isDown) {
+          handleActive(href)
+        }
+      })
+
+      inView(href).on('enter', () => {
+        if (!isDown) {
+          handleActive(href)
+        }
+      })
+
+      this.onclick = function(e) {
+        var pos = $(href).offset().top - 10;
+        $("html,body").animate({scrollTop: pos}, 300);
+        setTimeout(() => {
+          handleActive(href)
+        }, 350)
+        return false
+      }
+  })
+
+  function handleActive(href) {
+    document.querySelectorAll('.toc-link').forEach(elm => {
+      elm.classList.remove('active')
+    })
+    document.querySelector(".toc [href='"+ href +"']").classList.add('active')
+  }
+</script>
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+</body>
+</html>
