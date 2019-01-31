@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="个人技术研究站">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+    
+  <title>Git命令速查表 | Adam&#39;s byte</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class="logo" href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/new" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+</header>
+
+  <main id="post">
+    <div class="content">
+        <article>
+            <section class="content markdown-body">
+                <h1>Git命令速查表</h1>
+                <div class="post-meta">
+                    <i class="fa fa-calendar" aria-hidden="true"></i> <time>2018年06月28日</time>
+                    
+                    
+                    | 
+                    <i class="fa fa-tag" aria-hidden="true"></i>
+                    
+                    
+  <a href="/tags/#Git" class="tag">Git</a>
+
+
+                    
+                </div>
+                <p><img src="/img/git_command.jpg" alt="Git命令速查表"></p>
+<h3 id="Git环境篇"><a href="#Git环境篇" class="headerlink" title="Git环境篇"></a>Git环境篇</h3><blockquote>
+<p>创建仓库：</p>
+</blockquote>
+<pre><code>$ git init --bare
+</code></pre><blockquote>
+<p>passwd文件同目录操作：</p>
+</blockquote>
+<pre><code>htpasswd命令是Apache的Web服务器内置工具，用于创建和更新储存用户名、
+域和用户基本认证的密码文件。 
+-c：创建一个加密文件； 
+-n：不更新加密文件，只将加密后的用户名密码显示在屏幕上； 
+-m：默认采用MD5算法对密码进行加密； 
+-d：采用CRYPT算法对密码进行加密； 
+-p：不对密码进行进行加密，即明文密码； 
+-s：采用SHA算法对密码进行加密； 
+-b：在命令行中一并输入用户名和密码而不是根据提示输入密码； 
+-D：删除指定的用户。
+</code></pre><blockquote>
+<p>创建用户：</p>
+</blockquote>
+<pre><code>$ htpasswd -d passwd 用户名
+</code></pre><blockquote>
+<p>删除用户：</p>
+</blockquote>
+<pre><code>$ htpasswd -D passwd customizeName
+</code></pre><blockquote>
+<p>克隆项目：</p>
+</blockquote>
+<pre><code>$ mkdir /data/myProject
+$ cd /data/myProject/
+$ git clone https://github.com/spring-cloud-samples/sso.git
+</code></pre><blockquote>
+<p>提交项目：</p>
+</blockquote>
+<pre><code>$ git config --global user.name 用户名
+$ git config --global user.email 邮箱
+$ git config --list 
+$ git commit -m &apos;comments here&apos; //把stage中的修改提交到本地库
+$ git push //把本地库的修改提交到远程库中  
+</code></pre>
+            </section>
+        </article>
+        
+        <!-- disqus 评论框 start -->
+        <div class="comment">
+            <div id="disqus_thread" class="disqus-thread">
+                <i>评论未能加载 DISQUS被屏蔽 请检查网络</i>
+            </div>
+        </div>
+        <!-- disqus 评论框 end -->
+        
+        
+    </div>
+        
+    <aside>
+        <div class="toc-container">
+            <h1>目录</h1>
+            <div class="content">
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Git环境篇"><span class="toc-number">1.</span> <span class="toc-text">Git环境篇</span></a></li></ol>
+            </div>
+        </div>
+    </aside>
+        
+</main>
+
+<!-- disqus 公共JS代码 -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "adbyte-cn";
+    var disqus_identifier = "https://www.adbyte.cn/archives/GitCommand/";
+    var disqus_url = "https://www.adbyte.cn/archives/GitCommand/";
+
+    isAgent(getDisqus)
+
+    // determine user agent in China
+    function isAgent(cb) {
+        var url = '//graph.facebook.com/feed?callback=h';
+        var xhr = new XMLHttpRequest();
+        var called = false;
+        xhr.open('GET', url);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                called = true;
+                cb(true);
+            }
+        };
+        xhr.send();
+        // timeout 1s, this facebook API is very fast.
+        setTimeout(function() {
+            if (!called) {
+                xhr.abort();
+                cb(false)
+            }
+        }, 1000);
+    }
+
+    function getDisqus(isAgent) {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript';
+        dsq.async = true
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq)
+    }
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019 adbyte.cn 苏ICP备17033525号-1 All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="/lib/in-view.min.js"></script>
+<script src="/lib/lodash.min.js"></script>
+<script>
+  var isDown = true
+  var oldY = 0
+  inView.offset(50)
+
+  document.body.addEventListener('touchstart', function(){});
+  
+  window.addEventListener('scroll', _.throttle(e => {
+    var currentY = window.scrollY
+    if((oldY - currentY) < 0) {
+      isDown = true
+    } else {
+      isDown = false
+    }
+    oldY = currentY
+  }, 250))
+
+  $("article img").each(function() {
+      var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+      $(this).wrapAll(strA);
+  });
+
+  $('.toc-link').each(function() {
+      var href = $(this).attr("href");
+      
+      inView(href).on('exit', () => {
+        if (isDown) {
+          handleActive(href)
+        }
+      })
+
+      inView(href).on('enter', () => {
+        if (!isDown) {
+          handleActive(href)
+        }
+      })
+
+      this.onclick = function(e) {
+        var pos = $(href).offset().top - 10;
+        $("html,body").animate({scrollTop: pos}, 300);
+        setTimeout(() => {
+          handleActive(href)
+        }, 350)
+        return false
+      }
+  })
+
+  function handleActive(href) {
+    document.querySelectorAll('.toc-link').forEach(elm => {
+      elm.classList.remove('active')
+    })
+    document.querySelector(".toc [href='"+ href +"']").classList.add('active')
+  }
+</script>
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+</body>
+</html>
