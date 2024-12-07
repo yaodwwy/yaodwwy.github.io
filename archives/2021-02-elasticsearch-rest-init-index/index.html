@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>ElasticSearch RestHighLevelClient 自动检测索引并创建 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          ElasticSearch RestHighLevelClient 自动检测索引并创建
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2021年02月04日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tags"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#ElasticSearch" class='tag'>ElasticSearch</a>
+
+  <a href="/tags/#RestHighLevelClient" class='tag'>RestHighLevelClient</a>
+
+
+          
+        </div>
+        <p>ElasticSearch在JAVA中，如果使用TCP连接方式，则可以使用<code>@Document</code>进行索引的自动创建，如果使用REST方式则非常麻烦。</p>
+<p>RestHighLevelClient是ES提供的应用层API客户端组件，使用Http进行CRUD；原理是模拟各种es需要的请求，如GET,PUT,POST,DELETE等动作。</p>
+<p>本文是通过schema的json文件，在项目启动时自动检查及创建新索引。<br>把schema文件放入到 resources 目录下就可以被检测到；实现由文件名创建索引，如果索引已经存在，则不会覆盖。</p>
+<p>Schema：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;long&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;analyzer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ik_max_word&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;time&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;date&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;createdBy&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;keyword&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>代码 ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"><span class="keyword">import</span> lombok.RequiredArgsConstructor;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.RequestOptions;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.RestHighLevelClient;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.indices.CreateIndexRequest;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.indices.GetIndexRequest;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.PostConstruct;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Adam</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@RequiredArgsConstructor(onConstructor_ = &#123;@Autowired&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ElasticsearchRestfulConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> RestHighLevelClient client;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ObjectMapper mapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initElasticsearchTemplate</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">prefix</span> <span class="operator">=</span> <span class="string">&quot;BOOT-INF/classes/&quot;</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// resources目录下的json文件都可以被检测到；</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">suffix</span> <span class="operator">=</span> <span class="string">&quot;.json&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">jarName</span> <span class="operator">=</span> <span class="string">&quot;app.jar&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//在Linux环境下使用Docker打的包名字带hash，使用统配查找</span></span><br><span class="line">        <span class="keyword">if</span> (!System.getProperties().getProperty(<span class="string">&quot;os.name&quot;</span>).toUpperCase().startsWith(<span class="string">&quot;WIN&quot;</span>)) &#123;</span><br><span class="line">            jarName = <span class="string">&quot;*.jar&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//支持在Windows的IDEA环境下获取文件信息</span></span><br><span class="line">        File[] files = <span class="keyword">new</span> <span class="title class_">File</span>(<span class="built_in">this</span>.getClass().getResource(<span class="string">&quot;/&quot;</span>).getPath()).listFiles();</span><br><span class="line">        log.info(<span class="string">&quot;检查并创建新索引列表：&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (files != <span class="literal">null</span>) &#123;</span><br><span class="line">            log.info(<span class="string">&quot;通过文件目录获取索引资源文件列表&quot;</span>);</span><br><span class="line">            <span class="keyword">for</span> (File file : files) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!file.getName().endsWith(suffix)) &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="type">String</span> <span class="variable">indexName</span> <span class="operator">=</span> file.getName().split(suffix)[<span class="number">0</span>];</span><br><span class="line">                <span class="type">Map</span> <span class="variable">map</span> <span class="operator">=</span> mapper.readValue(file, Map.class);</span><br><span class="line">                <span class="built_in">this</span>.checkAndCreateIndices(indexName, map);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            log.info(<span class="string">&quot;通过jar文件命令获取索引资源列表&quot;</span>);</span><br><span class="line">            String[] cmd = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;jar&quot;</span>, <span class="string">&quot;-tf&quot;</span>, jarName&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">ps</span> <span class="operator">=</span> Runtime.getRuntime().exec(cmd);</span><br><span class="line">            <span class="type">BufferedReader</span> <span class="variable">br</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(ps.getInputStream()));</span><br><span class="line">            String line;</span><br><span class="line">            <span class="keyword">while</span> ((line = br.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (line.startsWith(prefix) &amp;&amp; line.endsWith(suffix)) &#123;</span><br><span class="line">                    <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> line.split(prefix)[<span class="number">1</span>];</span><br><span class="line">                    <span class="type">InputStream</span> <span class="variable">is</span> <span class="operator">=</span> <span class="built_in">this</span>.getClass().getClassLoader().getResourceAsStream(fileName);</span><br><span class="line">                    <span class="type">Map</span> <span class="variable">map</span> <span class="operator">=</span> mapper.readValue(is, Map.class);</span><br><span class="line">                    <span class="built_in">this</span>.checkAndCreateIndices(fileName.split(suffix)[<span class="number">0</span>], map);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">checkAndCreateIndices</span><span class="params">(String indexName, Map map)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;Checking Index: &#123;&#125;&quot;</span>, indexName);</span><br><span class="line"></span><br><span class="line">        <span class="type">GetIndexRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GetIndexRequest</span>(indexName);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">exists</span> <span class="operator">=</span> client.indices().exists(request, RequestOptions.DEFAULT);</span><br><span class="line">        <span class="keyword">if</span> (exists) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">CreateIndexRequest</span> <span class="variable">createIndexRequest</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CreateIndexRequest</span>(indexName);</span><br><span class="line">        <span class="type">CreateIndexRequest</span> <span class="variable">source</span> <span class="operator">=</span> createIndexRequest.source(map);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client.indices().create(source, RequestOptions.DEFAULT);</span><br><span class="line">            log.info(<span class="string">&quot;Index: &#123;&#125; Created!&quot;</span>, indexName);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;创建新索引失败，请检查资源文件！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

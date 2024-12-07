@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>jira 8.14.1 版本 Docker 部署 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          jira 8.14.1 版本 Docker 部署
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2021年04月28日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#jira" class='tag'>jira</a>
+
+
+          
+        </div>
+        <p>jira是Atlassian公司出品的项目与事务跟踪工具，被广泛应用于缺陷跟踪（bug管理）、客户服务、需求收集、流程审批、任务跟踪、项目跟踪和敏捷管理等工作领域。</p>
+<h3 id="补丁脚本已经编译进容器里了"><a href="#补丁脚本已经编译进容器里了" class="headerlink" title="补丁脚本已经编译进容器里了"></a>补丁脚本已经编译进容器里了</h3><pre><code># 通过 docker-compose.yml 运行容器
+</code></pre>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">jira:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;yaodwwy/jira&quot;</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">jira</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">jira-config:/var/atlassian/jira</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">jira-app:/opt/atlassian/jira</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">jira-log:/opt/atlassian/jira/logs</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">jira-config:</span></span><br><span class="line">  <span class="attr">jira-app:</span></span><br><span class="line">  <span class="attr">jira-log:</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>已加入补丁文件，进入试用模式，默认29天到期直接点击注册即可激活至2033年</p>
+</blockquote>
+<h3 id="迁移升级说明："><a href="#迁移升级说明：" class="headerlink" title="迁移升级说明："></a>迁移升级说明：</h3><ul>
+<li>备份：项目备份(&#x2F;jira&#x2F;export)、数据库备份、文件目录备份(&#x2F;jira&#x2F;data)；</li>
+<li>新建数据库 修改 dbconfig.xml 指向新的数据库；</li>
+<li>修改 k8s 的 dev-jira.yml 指向新的储存卷目录；</li>
+<li>复制文件目录备份(&#x2F;jira&#x2F;data)下的用户头像(avatars) 附件(attachments) 插件(git-plugin)到新的位置；</li>
+<li>部署 yml 启动时选择导入数据 使用项目备份文件；</li>
+<li>等待完成。</li>
+</ul>
+<h3 id="如果未从软件中备份zip数据文件，可以通过改数据配置文件后，直接启动jira"><a href="#如果未从软件中备份zip数据文件，可以通过改数据配置文件后，直接启动jira" class="headerlink" title="如果未从软件中备份zip数据文件，可以通过改数据配置文件后，直接启动jira"></a>如果未从软件中备份zip数据文件，可以通过改数据配置文件后，直接启动jira</h3><pre><code>地址必须在容器中能访问！不用更新到 jira 8.10.0 了 postgres 9.4 不支持！
+</code></pre>
+<blockquote>
+<p>jira推荐挂载方式：</p>
+</blockquote>
+<pre><code>  # 用户头像(avatars) 附件(attachments) 插件(git-plugin)
+- mountPath: /var/jira/data
+  name: jira
+  subPath: jira/data
+  
+  # 系统备份输出目录
+- mountPath: /var/jira/export
+  name: jira
+  subPath: jira/export
+  
+  # 系统备份导入目录
+- mountPath: /var/jira/import
+  name: jira
+  subPath: jira/import
+
+  # Lucene搜索索引不支持NFS挂载，因为已知NFS挂载会导致您的应用程序出现稳定性问题。
+    不推荐搜索索引目录“/var/jira/caches/indexesV1”挂载在“nfs”。
+</code></pre>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A5%E4%B8%81%E8%84%9A%E6%9C%AC%E5%B7%B2%E7%BB%8F%E7%BC%96%E8%AF%91%E8%BF%9B%E5%AE%B9%E5%99%A8%E9%87%8C%E4%BA%86"><span class="toc-number">1.</span> <span class="toc-text">补丁脚本已经编译进容器里了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%81%E7%A7%BB%E5%8D%87%E7%BA%A7%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">迁移升级说明：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E6%9C%AA%E4%BB%8E%E8%BD%AF%E4%BB%B6%E4%B8%AD%E5%A4%87%E4%BB%BDzip%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%EF%BC%8C%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E6%94%B9%E6%95%B0%E6%8D%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%90%8E%EF%BC%8C%E7%9B%B4%E6%8E%A5%E5%90%AF%E5%8A%A8jira"><span class="toc-number">3.</span> <span class="toc-text">如果未从软件中备份zip数据文件，可以通过改数据配置文件后，直接启动jira</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

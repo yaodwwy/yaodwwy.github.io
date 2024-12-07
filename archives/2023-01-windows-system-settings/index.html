@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Windows 常用系统配置 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          Windows 常用系统配置
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2023年01月17日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Windows" class='tag'>Windows</a>
+
+
+          
+        </div>
+        <p>收录一些Windows常用的配置项。</p>
+<h2 id="系统变量表"><a href="#系统变量表" class="headerlink" title="系统变量表"></a>系统变量表</h2><table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>描述</th>
+<th align="left">输出示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>%ALLUSERSPROFILE%</code></td>
+<td>所有用户Profile文件位置</td>
+<td align="left"><code>C:\ProgramData</code></td>
+</tr>
+<tr>
+<td><code>%APPDATA%</code></td>
+<td>应用程序数据的默认存放位置</td>
+<td align="left"><code>C:\Users\Adam\AppData\Roaming</code></td>
+</tr>
+<tr>
+<td><code>%CD%</code></td>
+<td>当前目录</td>
+<td align="left"><code>C:\Users\Adam</code></td>
+</tr>
+<tr>
+<td><code>%CMDCMDLINE%</code></td>
+<td>启动当前cmd.exe所使用的命令行</td>
+<td align="left"><code>&quot;C:\Windows\system32\cmd.exe&quot;</code></td>
+</tr>
+<tr>
+<td><code>%CMDEXTVERSION%</code></td>
+<td>命令出当前命令处理程序扩展版本号</td>
+<td align="left"><code>2</code></td>
+</tr>
+<tr>
+<td><code>%CommonProgramFiles%</code></td>
+<td>常用文件的文件夹路径</td>
+<td align="left"><code>C:\ProgramFiles\CommonFiles</code></td>
+</tr>
+<tr>
+<td><code>%COMPUTERNAME%</code></td>
+<td>计算机名</td>
+<td align="left"><code>ADAM-PC</code></td>
+</tr>
+<tr>
+<td><code>%COMSPEC%</code></td>
+<td>可执行命令外壳（命令处理程序）的路径</td>
+<td align="left"><code>C:\Windows\system32\cmd.exe</code></td>
+</tr>
+<tr>
+<td><code>%DATE%</code></td>
+<td>当前日期</td>
+<td align="left"><code>2023/01/17周二</code></td>
+</tr>
+<tr>
+<td><code>%TIME%</code></td>
+<td>当前时间</td>
+<td align="left"><code>12:03:55.64</code></td>
+</tr>
+<tr>
+<td><code>%ERRORLEVEL%</code></td>
+<td>最近使用的命令的错误代码</td>
+<td align="left"><code>0</code></td>
+</tr>
+<tr>
+<td><code>%HOMEDRIVE%</code></td>
+<td>与用户主目录所在的驱动器盘符</td>
+<td align="left"><code>C</code></td>
+</tr>
+<tr>
+<td><code>%HOMEPATH%</code></td>
+<td>用户主目录的完整路径</td>
+<td align="left"><code>\Users\Adam</code></td>
+</tr>
+<tr>
+<td><code>%NUMBER_OF_PROCESSORS%</code></td>
+<td>计算机安装的处理器数</td>
+<td align="left"><code>4</code></td>
+</tr>
+<tr>
+<td><code>%Path%</code></td>
+<td>可执行文件的搜索路径</td>
+<td align="left"><code>C:\Windows\system32;C:\Windows;...</code></td>
+</tr>
+<tr>
+<td><code>%PATHEXT%</code></td>
+<td>操作系统认为可被执行的文件扩展名</td>
+<td align="left"><code>.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL</code></td>
+</tr>
+<tr>
+<td><code>%PROCESSOR_ARCHITECTURE%</code></td>
+<td>处理器的芯片架构</td>
+<td align="left"><code>AMD64</code></td>
+</tr>
+<tr>
+<td><code>%PROCESSOR_LEVEL%</code></td>
+<td>计算机的处理器的型号</td>
+<td align="left"><code>6</code></td>
+</tr>
+<tr>
+<td><code>%PROCESSOR_REVISION%</code></td>
+<td>处理器的修订号</td>
+<td align="left"><code>9e09</code></td>
+</tr>
+<tr>
+<td><code>%ProgramFiles%</code></td>
+<td>ProgramFiles文件夹的路径</td>
+<td align="left"><code>C:\ProgramFiles</code></td>
+</tr>
+<tr>
+<td><code>%PROMPT%</code></td>
+<td>当前命令解释器的命令提示设置</td>
+<td align="left"><code>$P$G</code></td>
+</tr>
+<tr>
+<td><code>%RANDOM%</code></td>
+<td>界于0和32767之间的随机十进制数</td>
+<td align="left"><code>24894</code></td>
+</tr>
+<tr>
+<td><code>%SYSTEMDRIVE%</code></td>
+<td>Windows启动目录驱动器</td>
+<td align="left"><code>C</code></td>
+</tr>
+<tr>
+<td><code>%SYSTEMROOT%</code></td>
+<td>Windows启动目录</td>
+<td align="left"><code>C:\Windows</code></td>
+</tr>
+<tr>
+<td><code>%TMP%</code></td>
+<td>临时目录</td>
+<td align="left"><code>C:\Users\Adam\AppData\Local\Temp</code></td>
+</tr>
+<tr>
+<td><code>%USERDOMAIN%</code></td>
+<td>包含用户帐号的域的名字</td>
+<td align="left"><code>ADAM-PC</code></td>
+</tr>
+<tr>
+<td><code>%USERNAME%</code></td>
+<td>当前登录的用户的名字</td>
+<td align="left"><code>Adam</code></td>
+</tr>
+<tr>
+<td><code>%USERPROFILE%</code></td>
+<td>当前用户Profile文件位置</td>
+<td align="left"><code>C:\Users\Adam</code></td>
+</tr>
+<tr>
+<td><code>%WINDIR%</code></td>
+<td>操作系统目录的位置</td>
+<td align="left"><code>C:\Windows</code></td>
+</tr>
+</tbody></table>
+<h2 id="windows-端口转发"><a href="#windows-端口转发" class="headerlink" title="windows 端口转发"></a>windows 端口转发</h2><p>自Windows XP开始，Windows中就内置网络端口转发的功能。任何传入到本地端口的TCP连接（IPv4或IPv6）<br>都可以被重定向到另一个本地端口，或远程计算机上的端口，并且系统不需要有一个专门用于侦听该端口的服务。</p>
+<pre><code>netsh interface portproxy add v4tov4 listenaddress=10.0.3.123 listenport=22 connectaddress=192.168.56.1 connectport=22
+</code></pre>
+<blockquote>
+<p>依次为【windows ip】 【windows 端口】 【虚拟网卡ip】【虚拟网卡端口】</p>
+</blockquote>
+<h4 id="查看转发列表"><a href="#查看转发列表" class="headerlink" title="查看转发列表"></a>查看转发列表</h4><pre><code>netsh interface portproxy show  v4tov4
+</code></pre>
+<h4 id="取消转发："><a href="#取消转发：" class="headerlink" title="取消转发："></a>取消转发：</h4><pre><code>netsh interface portproxy delete v4tov4 listenaddress=【windows ip】  listenport=【windows 端口】
+</code></pre>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F%E8%A1%A8"><span class="toc-number">1.</span> <span class="toc-text">系统变量表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#windows-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="toc-number">2.</span> <span class="toc-text">windows 端口转发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%BD%AC%E5%8F%91%E5%88%97%E8%A1%A8"><span class="toc-number">2.0.1.</span> <span class="toc-text">查看转发列表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%96%E6%B6%88%E8%BD%AC%E5%8F%91%EF%BC%9A"><span class="toc-number">2.0.2.</span> <span class="toc-text">取消转发：</span></a></li></ol></li></ol></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link active">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='index'>
+  <div class="posts-list">
+    
+    <section>
+      <a href="/archives/2024-07-use-multiple-ssh-key/">
+        <h3 class='post-head'>
+          多用户配置ssh登录
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <p>因为在实际的工作学习场景中，公司的远程代码仓库大多是自己搭建的，例如我司就是gitLab，需要配置一个ssh,个人学习代码仓库在gitHub,也要配置一个SSH，所以必须要配置俩了。</p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2024年07月17日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tags"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#ssh" class='tag'>ssh</a>
+
+  <a href="/tags/#github" class='tag'>github</a>
+
+  <a href="/tags/#config" class='tag'>config</a>
+
+  <a href="/tags/#codeup" class='tag'>codeup</a>
+
+  <a href="/tags/#ssh-keygen" class='tag'>ssh-keygen</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2024-01-publish-jar-to-maven-use-github/">
+        <h3 class='post-head'>
+          使用Github发布项目包到Maven中央仓库简要版本
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <p>Maven中央仓库并不支持直接发布jar包，需要将jar包发布到一些指定的第三方Maven仓库，然后该仓库再将jar包同步到Maven中央仓库</p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2024年01月26日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tags"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#Github" class='tag'>Github</a>
+
+  <a href="/tags/#Maven" class='tag'>Maven</a>
+
+  <a href="/tags/#Sonatype" class='tag'>Sonatype</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2024-01-use-cups-in-centos/">
+        <h3 class='post-head'>
+          在Centos中使用cups连接打印机
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <p>Centos下安装Cups可以连接各种打印机进行打印，笔者有遇到乱码的情况:<br><a target="_blank" rel="noopener" href="https://ubuntuforums.org/showthread.php?t=2309122">Printing to remote CUPS server from Windows prints “@PJL” code</a></p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2024年01月24日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tags"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#HP" class='tag'>HP</a>
+
+  <a href="/tags/#EPSON" class='tag'>EPSON</a>
+
+  <a href="/tags/#Centos" class='tag'>Centos</a>
+
+  <a href="/tags/#CUPS" class='tag'>CUPS</a>
+
+  <a href="/tags/#Linux%E6%89%93%E5%8D%B0%E6%9C%BA" class='tag'>Linux打印机</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2023-06-openclash-with-openwrt/">
+        <h3 class='post-head'>
+          使用树莓派下Docker容器Openwrt系统架设Openclash
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <p>本文记录配置关键点记录：</p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2023年06月17日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tags"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#Docker" class='tag'>Docker</a>
+
+  <a href="/tags/#Padavan" class='tag'>Padavan</a>
+
+  <a href="/tags/#Openclash" class='tag'>Openclash</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2023-06-vpn-with-openwrt/">
+        <h3 class='post-head'>
+          使用Openwrt系统架设VPN（Padavan潘多拉）
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <p>VPN（虚拟专用网络）第一层隧道协议PPtp所使用的默认端口号是TCP 1723</p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2023年06月09日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tags"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#Padavan" class='tag'>Padavan</a>
+
+  <a href="/tags/#VPN" class='tag'>VPN</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2023-06-chinese-mirror/">
+        <h3 class='post-head'>
+          常用的中国镜像源
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <div class="paragraph">
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2023年06月02日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tag"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#%E9%95%9C%E5%83%8F%E5%BA%93" class='tag'>镜像库</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2023-01-windows-system-settings/">
+        <h3 class='post-head'>
+          Windows 常用系统配置
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <p>收录一些Windows常用的配置项。</p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2023年01月17日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tag"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#Windows" class='tag'>Windows</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2022-10-video-handle/">
+        <h3 class='post-head'>
+          视频下载处理工具合集
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <p>You-Get 乃一小小哒命令行程序，提供便利的方式来下载网络上的媒体信息。</p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2022年10月25日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tags"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#you-get" class='tag'>you-get</a>
+
+  <a href="/tags/#ffmpeg" class='tag'>ffmpeg</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2021-12-postgres12-docker-the-database-system-is-starting-up/">
+        <h3 class='post-head'>
+          Postgres 12 在容器中文件损坏问题
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <h4 id="如何把阿里云RDS的自动备份恢复到本地呢？"><a href="#如何把阿里云RDS的自动备份恢复到本地呢？" class="headerlink" title="如何把阿里云RDS的自动备份恢复到本地呢？"></a>如何把阿里云RDS的自动备份恢复到本地呢？</h4><p>从阿里云上下载的自动备份文件默认情况下是tar包</p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2021年12月24日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tags"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#%E9%98%BF%E9%87%8C%E4%BA%91RDS" class='tag'>阿里云RDS</a>
+
+  <a href="/tags/#postgres" class='tag'>postgres</a>
+
+  <a href="/tags/#docker" class='tag'>docker</a>
+
+
+        
+      </div>
+    </section>
+    
+    <section>
+      <a href="/archives/2018-12-linux-minimal/">
+        <h3 class='post-head'>
+          Linux 发行版CentOS 7 开发汇总
+        </h3>
+      </a>
+      
+      <div class="post-content">
+        
+        
+        
+        <p>　　本篇针对CentOS7环境下，对常见操作的汇总。从基础入门到生产配置都有涉及，可以通过右边导航快速跳转。或是Ctrl + F 查找相关说明。CentOS7 Minimal ISO这个镜像的目的是安装一个非常基本的系统，具有一个功能系统所需的最少的软件包。默认安装后第一件事是联网、关防火墙或配置防火墙、配置环境等等操作。</p>
+        
+        
+      </div>
+      <div class='post-meta'>
+        <i class="fa fa-calendar"
+          aria-hidden="true"></i> <time>
+          2021年09月30日</time>
+        
+        
+        <span class="separator">|</span>
+        
+        <i class="fa fa-tags"
+          aria-hidden="true"></i>
+        
+        
+  <a href="/tags/#Linux" class='tag'>Linux</a>
+
+  <a href="/tags/#CentOS%207" class='tag'>CentOS 7</a>
+
+  <a href="/tags/#CentOS" class='tag'>CentOS</a>
+
+  <a href="/tags/#Raspberry%20Pi" class='tag'>Raspberry Pi</a>
+
+
+        
+      </div>
+    </section>
+    
+  </div>
+  <aside>
+    
+    <div class="search">
+      <div class="content">
+        <form action="//www.google.com/search"
+          target="_blank"
+          class="search-form">
+          <input type="text"
+            name="q"
+            maxlength="20"
+            placeholder=搜索>
+          <input type="hidden"
+            name='sitesearch'
+            value="https://www.adbyte.cn">
+        </form>
+      </div>
+    </div>
+    
+    
+    <div class="avatar">
+      <img src="/img/avatar.jpg"
+        alt="avatar">
+      
+      <div class="content">
+        <span>
+          开发日志</span>
+      </div>
+      
+    </div>
+    
+    
+    
+    <div class="links">
+      <h1>
+        友情链接
+      </h1>
+      <div class="content">
+        
+        <a href="https://ip.sb"
+          target="_blank">
+          IP地址</a>
+        
+        <a href="https://u.nu/"
+          target="_blank">
+          短链接</a>
+        
+        <a href="https://tools.lancely.tech/apple/app-search"
+          target="_blank">
+          App历史版本</a>
+        
+        <a href="https://www.qimai.cn/"
+          target="_blank">
+          七麦数据</a>
+        
+      </div>
+    </div>
+    
+  </aside>
+</main>
+
+<div class="paging">
+  <div class="paging-container">
+    
+    <div></div>    
+    
+    
+    <div class='page-next'>
+      <a href="/page/2/">下一页</a>
+    </div>
+    
+  </div>
+</div>
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Redis 初始使用配置 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          Redis 初始使用配置
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2018年06月29日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Redis" class='tag'>Redis</a>
+
+
+          
+        </div>
+        <p>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。</p>
+<h3 id="登陆"><a href="#登陆" class="headerlink" title="登陆"></a>登陆</h3><pre><code>$ redis-cli -h localhost -p 6379
+</code></pre>
+<h3 id="密码"><a href="#密码" class="headerlink" title="密码"></a>密码</h3><pre><code>~&gt; auth password
+</code></pre>
+<h3 id="初始化密码"><a href="#初始化密码" class="headerlink" title="初始化密码"></a>初始化密码</h3><pre><code>~&gt; config set requirepass password
+~&gt; config get requirepass
+</code></pre>
+<h3 id="解除保护模式"><a href="#解除保护模式" class="headerlink" title="解除保护模式"></a>解除保护模式</h3><pre><code>~&gt; config set protected-mode &quot;no&quot;
+</code></pre>
+<h3 id="查看匹配所有Key"><a href="#查看匹配所有Key" class="headerlink" title="查看匹配所有Key"></a>查看匹配所有Key</h3><pre><code>KEYS * #生产禁用#
+</code></pre>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E9%99%86"><span class="toc-number">1.</span> <span class="toc-text">登陆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%86%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AF%86%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">初始化密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E9%99%A4%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">解除保护模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%8C%B9%E9%85%8D%E6%89%80%E6%9C%89Key"><span class="toc-number">5.</span> <span class="toc-text">查看匹配所有Key</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

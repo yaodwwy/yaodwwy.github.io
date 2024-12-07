@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Git命令速查表 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          Git命令速查表
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2021年04月29日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Git" class='tag'>Git</a>
+
+
+          
+        </div>
+        <p>Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.</p>
+<p><img src="/img/git_command.jpg" alt="Git命令速查表"></p>
+<h3 id="Git环境篇"><a href="#Git环境篇" class="headerlink" title="Git环境篇"></a>Git环境篇</h3><blockquote>
+<p>创建仓库：</p>
+</blockquote>
+<pre><code>$ git init --bare
+</code></pre>
+<blockquote>
+<p>passwd文件同目录操作：</p>
+</blockquote>
+<pre><code>htpasswd命令是Apache的Web服务器内置工具，用于创建和更新储存用户名、
+域和用户基本认证的密码文件。 
+-c：创建一个加密文件； 
+-n：不更新加密文件，只将加密后的用户名密码显示在屏幕上； 
+-m：默认采用MD5算法对密码进行加密； 
+-d：采用CRYPT算法对密码进行加密； 
+-p：不对密码进行进行加密，即明文密码； 
+-s：采用SHA算法对密码进行加密； 
+-b：在命令行中一并输入用户名和密码而不是根据提示输入密码； 
+-D：删除指定的用户。
+</code></pre>
+<blockquote>
+<p>创建用户：</p>
+</blockquote>
+<pre><code>$ htpasswd -d passwd 用户名
+</code></pre>
+<blockquote>
+<p>删除用户：</p>
+</blockquote>
+<pre><code>$ htpasswd -D passwd customizeName
+</code></pre>
+<blockquote>
+<p>克隆项目：</p>
+</blockquote>
+<pre><code>$ mkdir /data/myProject
+$ cd /data/myProject/
+$ git clone https://github.com/spring-cloud-samples/sso.git
+</code></pre>
+<blockquote>
+<p>提交项目：</p>
+</blockquote>
+<pre><code>$ git config --global user.name 用户名
+$ git config --global user.email 邮箱
+$ git config --list 
+$ git commit -m &#39;comments here&#39; //把stage中的修改提交到本地库
+$ git push //把本地库的修改提交到远程库中  
+</code></pre>
+<blockquote>
+<p>Hexo 博客中 出现 LF will be replaced by CRLF</p>
+</blockquote>
+<pre><code># git工作区默认为CRLF来作为换行符 禁用自动转换 
+$ git config --global core.autocrlf false
+</code></pre>
+<h3 id="Git重生篇"><a href="#Git重生篇" class="headerlink" title="Git重生篇"></a>Git重生篇</h3><blockquote>
+<p>git仓库删除所有提交历史记录 从0开始为一个新仓库</p>
+</blockquote>
+<pre><code>$ git checkout --orphan latest_branch   // 全新建一个孤儿分支
+$ git add -A                            // 加入文件
+$ git commit                            // 提交本地
+$ git branch -D master                  // 删除远程
+$ git branch -m master                  // 改孤儿分支名
+$ git push -f origin master             // 强推
+</code></pre>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Git%E7%8E%AF%E5%A2%83%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">Git环境篇</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Git%E9%87%8D%E7%94%9F%E7%AF%87"><span class="toc-number">2.</span> <span class="toc-text">Git重生篇</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

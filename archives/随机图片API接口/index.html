@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>随机图片API接口 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          随机图片API接口
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2018年06月08日</time>
+          
+          
+        </div>
+        <p><img src="https://picsum.photos/610/320" alt="测试图片"></p>
+<p>百度上有很多获取一张背景图片的URL接口，替换 URL 即可获取不同服务商提供的精美图片，以下是推荐接口。</p>
+<p>MD文档中修改图片大小的方法：<br><code>&lt;div style=&quot;width:10px&quot;&gt;&lt;/div&gt;</code></p>
+<h3 id="picsum-photos"><a href="#picsum-photos" class="headerlink" title="picsum.photos"></a>picsum.photos</h3><blockquote>
+<p>基本用法:<br><code>https://picsum.photos/320/180</code><br>宽度和高度放在网址后面<br><img src="https://picsum.photos/320/180" alt="基本用法"></p>
+</blockquote>
+<blockquote>
+<p>方形图像:<br><code>https://picsum.photos/180</code><br><img src="https://picsum.photos/180" alt="方形图像"></p>
+</blockquote>
+<blockquote>
+<p>随机图像:<br><code>https://picsum.photos/300/180/?random</code><br><img src="https://picsum.photos/300/180?random" alt="随机图像"></p>
+</blockquote>
+<blockquote>
+<p>灰度图像:<br><code>https://picsum.photos/g/300/180</code><br><code>/g/</code>路径灰度图像<br><img src="https://picsum.photos/g/300/180" alt="灰度图像"></p>
+</blockquote>
+<blockquote>
+<p>特定图像:<br><code>https://picsum.photos/300/180?image=0</code><br><img src="https://picsum.photos/300/180?image=0" alt="特定图像"></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://picsum.photos/images">点击这里</a>找到所有图像的列表。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>模糊的图像:<br><code>https://picsum.photos/300/180/?blur</code><br><img src="https://picsum.photos/300/180/?blur" alt="模糊的图像"></p>
+<blockquote>
+<p>通过追加<code>?blur</code>到url的末尾来获取模糊的图像。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>图像修剪:<br><code>https://picsum.photos/300/180/?gravity=east</code><br><img src="https://picsum.photos/300/180/?gravity=west" alt="图像修剪"></p>
+<blockquote>
+<p>支持的参数：north, east, south, west, center</p>
+</blockquote>
+</blockquote>
+<h3 id="source-unsplash-com"><a href="#source-unsplash-com" class="headerlink" title="source.unsplash.com"></a>source.unsplash.com</h3><hr>
+<blockquote>
+<p>随机图像<br><code>https://source.unsplash.com/random</code><br><img src="https://source.unsplash.com/random/300x180" alt="随机图像"></p>
+</blockquote>
+<blockquote>
+<p>每日&#x2F;每周的照片:<br><code>https://source.unsplash.com/daily | weekly</code><br><img src="https://source.unsplash.com/daily" alt="每日/每周的照片"></p>
+</blockquote>
+<blockquote>
+<p>随机搜索:<br><code>https://source.unsplash.com/featured/?&#123;KEYWORD&#125;,&#123;KEYWORD&#125;</code><br><img src="https://source.unsplash.com/1600x900/?nature,water" alt="随机搜索"></p>
+</blockquote>
+<h3 id="uploadbeta-com"><a href="#uploadbeta-com" class="headerlink" title="uploadbeta.com"></a>uploadbeta.com</h3><blockquote>
+<p>随机搜索词:<br><code>https://uploadbeta.com/api/pictures/random?key=&#123;KEYWORD&#125;</code><br><img src="https://uploadbeta.com/api/pictures/random?key=BingEverydayWallpaperPicture" alt="随机搜索词"></p>
+<blockquote>
+<p>支持的key：<code>BingEverydayWallpaperPicture</code>    <code>Tumblr</code>    <code>其它</code></p>
+</blockquote>
+</blockquote>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#picsum-photos"><span class="toc-number">1.</span> <span class="toc-text">picsum.photos</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#source-unsplash-com"><span class="toc-number">2.</span> <span class="toc-text">source.unsplash.com</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#uploadbeta-com"><span class="toc-number">3.</span> <span class="toc-text">uploadbeta.com</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

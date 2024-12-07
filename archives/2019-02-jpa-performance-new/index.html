@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>JPA调优实践一：合理使用实体关系的5个Tips 避免 N+1 问题 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          JPA调优实践一：合理使用实体关系的5个Tips 避免 N+1 问题
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2019年02月12日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#JPA" class='tag'>JPA</a>
+
+
+          
+        </div>
+        <p>写在最前面的话:<br>    JAVA程序员少不了和SQL打交道，ORM框架带给我们非常大的便利，与此同时也带来了性能不可控的风险。<br>这里不评测Mybatis和JPA相关的优缺点，仅对近些年的工作实践提供选型建议：</p>
+<blockquote>
+<p>如果团队是中级以上组成，请用JPA！如果团队参差不齐，请用Mybatis !</p>
+</blockquote>
+<p>因为JPA可调优的点太多，一不小心就会进入性能陷阱。</p>
+<hr>
+<p>数据库的表与表的关系对应到实体中就是引用关系，实体之间的关联很简单，但需要非常非常小心 <code>Lazy</code> 在关联时的使用。<br>引用的主要目标是从数据库中检索所请求的实体，并<strong>仅在需要时</strong>加载相关实体。<br>如果你只需要所请求的实体(单表查询)，JPA和Mybatis基本无差异。<br>但是，如果还需要一些相关联实体一并请求，它会产生额外的查询工作并且可能是产生性能问题的主要原因。</p>
+<p>我们来看看触发实体初始化的不同方法及其各自优缺点。</p>
+<h3 id="在实体上调用另外一个实体的引用"><a href="#在实体上调用另外一个实体的引用" class="headerlink" title="在实体上调用另外一个实体的引用"></a>在实体上调用另外一个实体的引用</h3><p>让我们从平时最常用的，也是最低效的方法开始。在EntityManager上使用find方法并直接调用List集合列表(<code>@OneToMany</code> 引用)。</p>
+<pre><code>Order order = this.em.find(Order.class, orderId);
+order.getItems().size();
+</code></pre>
+<p>好吧，此代码看起来没有什么问题，但是在实体初始化关系时就不那么理想了。<br>假设有一个需要查询后初始化的实体具有5个关联的实体。所以你会得到1 + 5 &#x3D; 6个查询。</p>
+<p>好的，这是另外5个查询。这仍然不是一个大问题。但我们的应用程序将由多个用户并行请求。</p>
+<p>假设你的系统为100个并行用户提供服务。你会得到100 + 5 * 100 &#x3D; 600个查询。这被称为n + 1选择问题，<br>显然这不是一个好方法。迟早，额外执行的查询的数量将拖跨应用程序。因此，你应该尝试避免这种方法并继续往下看。</p>
+<h3 id="在JPQL中使用-Join-Fetch"><a href="#在JPQL中使用-Join-Fetch" class="headerlink" title="在JPQL中使用 Join Fetch"></a>在JPQL中使用 Join Fetch</h3><p>初始化延迟关联的更好选择是使用带有提取连接的JPQL查询。</p>
+<pre><code>Query q = this.em.createQuery(&quot;SELECT o FROM Order o JOIN FETCH o.items i WHERE o.id = :id&quot;);
+q.setParameter(&quot;id&quot;, orderId);
+newOrder = (Order) q.getSingleResult();
+</code></pre>
+<p>这告诉实体管理器在同一查询中加载所选实体和关系。这种方法的优点和缺点也是显而易见的：</p>
+<p><code>优点</code>是JPA（Hibernate）在一个查询中提取所有内容。从性能的角度来看，这比第一种方法要好得多。</p>
+<p><code>缺点</code>是你需要编写执行查询的SQL代码。但是如果实体具有多个关联并且你需要为不同的实例进行不同的关联，则情况会更不好控制。<br>在这种情况下，需要为要初始化的每个所需关联组合写JPQL查询。这可能会显的非常混乱。</p>
+<p>在JPQL语句中使用fetch join可能需要大量的查询，这将使维护代码库变得困难。因此，在开始编写大量查询之前，你应该考虑可能需要的<br>获取连接查询结果的数量。如果数量很少，那么这是执行查询的最好方法。</p>
+<h3 id="在Criteria-API中使用-Fetch-Join"><a href="#在Criteria-API中使用-Fetch-Join" class="headerlink" title="在Criteria API中使用 Fetch Join"></a>在Criteria API中使用 Fetch Join</h3><p>这种方法与之前的方法基本相同。但这次你使用的是Criteria API而不是JPQL查询。</p>
+<pre><code>CriteriaBuilder cb = em.getCriteriaBuilder();
+CriteriaQuery q = cb.createQuery(Order.class);
+Root o = q.from(Order.class);
+o.fetch(&quot;items&quot;, JoinType.INNER);
+q.select(o);
+q.where(cb.equal(o.get(&quot;id&quot;), orderId));
+
+Order order = (Order)this.em.createQuery(q).getSingleResult();
+</code></pre>
+<p>优点和缺点与使用获取连接的JPQL查询相同。<br>JPA(Hibernate)从数据库中检索实体和一个查询的关系，并且每个关联组合都需要特别声明是否需要Fetch。如果是使用Spring DATA JPA 则可以用<br>Specification构建查询Predicate 通用Root的如下方法可以动态关联。</p>
+<pre><code>    Join&lt;Student, School&gt; joinSchool = root.join(&quot;school&quot;);
+    Fetch&lt;Student, School&gt; fetchSchool = root.fetch(&quot;school&quot;);
+</code></pre>
+<h3 id="命名实体图"><a href="#命名实体图" class="headerlink" title="命名实体图"></a>命名实体图</h3><p>命名实体图是JPA 2.1的新功能。它可用于定义需要从数据库中查询的实体图。实体图通过注解定义，并且与查询无关。</p>
+<pre><code>@Entity
+@NamedEntityGraph(name = &quot;graph.Order.items&quot;, 
+      attributeNodes = @NamedAttributeNode(&quot;items&quot;))
+public class Order implements Serializable &#123;
+....
+</code></pre>
+<p>然后，命名实体图可以由EntityManager的find方法使用。</p>
+<pre><code>EntityGraph graph = this.em.getEntityGraph(&quot;graph.Order.items&quot;);
+  
+Map hints = new HashMap();
+hints.put(&quot;javax.persistence.fetchgraph&quot;, graph);
+  
+Order order = this.em.find(Order.class, orderId, hints);
+</code></pre>
+<p>这基本上是我们第一种方法的改进版本。实体管理器将使用一个查询从数据库中检索已定义的实体图。<br>唯一的缺点是，你需要为每个要在一个查询中检索的关联组合注解命名实体图。<br>你将需要更少的额外注解，如我们的第二种方法，但它仍然可能变得非常混乱。因此，如果你只需定义有限数量的实体图并将其重用于不同的用例，<br>则命名实体图是一个很好的解决方案。否则，代码将难以维护。</p>
+<h3 id="动态实体图"><a href="#动态实体图" class="headerlink" title="动态实体图"></a>动态实体图</h3><p>动态实体图类似于命名的实体图。唯一的区别是，实体图是通过Java API定义的。</p>
+<pre><code>EntityGraph graph = this.em.createEntityGraph(Order.class);
+Subgraph itemGraph = graph.addSubgraph(&quot;items&quot;);
+    
+Map hints = new HashMap();
+hints.put(&quot;javax.persistence.loadgraph&quot;, graph);
+  
+Order order = this.em.find(Order.class, orderId, hints);
+</code></pre>
+<p>通过API的定义可能是优点也可说是缺点。如果你需要大量特定于用例的实体图，则最好在特定Java代码中定义实体图，而不是向实体添加注解。<br>这避免了具有非常复杂注解的实体。另一方面，动态实体图需要通过代码定义，可重用。<br>因此，如果你需要创建一个不会重复使用的特定于用例的图表，我建议使用动态实体图。如果要重用实体图，则更容易注解命名实体图。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>你已经了解了5种初始化延迟关联的方法。正如你所看到的，每个都有其优点和缺点。<br>通过在映射关系上调用方法来初始化<code>Lazy</code>关系会导致其他查询。出于性能原因，应该避免这种情况。<br>在JPQL语句中获取联接会将查询数量减少到一个，但你可能需要大量不同的查询语句。<br>Criteria API还支持提取连接，并且你需要为要初始化的每个关联组合使用特定代码。<br>如果你要在代码中重用已定义的<code>@NamedEntityGraph</code>，则命名实体图是一个很好的解决方案。<br>如果需要在查询中根据条件动态使用实体关系，则动态实体图可以是更好的解决方案。</p>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E5%AE%9E%E4%BD%93%E4%B8%8A%E8%B0%83%E7%94%A8%E5%8F%A6%E5%A4%96%E4%B8%80%E4%B8%AA%E5%AE%9E%E4%BD%93%E7%9A%84%E5%BC%95%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">在实体上调用另外一个实体的引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8JPQL%E4%B8%AD%E4%BD%BF%E7%94%A8-Join-Fetch"><span class="toc-number">2.</span> <span class="toc-text">在JPQL中使用 Join Fetch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8Criteria-API%E4%B8%AD%E4%BD%BF%E7%94%A8-Fetch-Join"><span class="toc-number">3.</span> <span class="toc-text">在Criteria API中使用 Fetch Join</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E5%9B%BE"><span class="toc-number">4.</span> <span class="toc-text">命名实体图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%AE%9E%E4%BD%93%E5%9B%BE"><span class="toc-number">5.</span> <span class="toc-text">动态实体图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">6.</span> <span class="toc-text">结论</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

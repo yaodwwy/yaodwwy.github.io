@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Spring Data JPA 查询条件工厂 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          Spring Data JPA 查询条件工厂
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2020年12月24日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tags"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#JPA" class='tag'>JPA</a>
+
+  <a href="/tags/#Spring" class='tag'>Spring</a>
+
+
+          
+        </div>
+        <p>使用 Spring Data JPA 时最大的问题往往不是技术难度问题，<br>毕竟ORM框架集成度已经可以做到懒人模式下开箱即用，同时也带来更大的性能隐患。<br>和当年的Hibernate一样，在中文圈一直不流行的其中一个原因，多数开发者认为<br>Hibernate自动化程度太高，可优化空间小，这恰恰只看到问题的一方面。<br>Hibernate的优化空间比 Mybatis 只多不少。<br>反观 <code>EclipseLink</code> <code>TopLink</code> <code>OpenJPA</code> 都没火起来，<br>但是到Spring Data JPA 反而又让JPA火了一把，又是为什么呢？<br>就像有的人喜欢自动档的汽车，有的人却喜欢手动档。各有各的原因。</p>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>本文讲述Spring Data JPA规范下的高效查询问题，<br>利用工厂方法，动态的把必须的表进行连接。</p>
+<p>数据结构如图所示 </p>
+<p><img src="/img/data-diagram.svg"></p>
+<blockquote>
+<p>说明：<br>一个组织有多个部门，一个部门有多个用户；<br>当查用户的时候，可以左连接部门的所有查询条件<br>也可以继续连接组织的查询条件，此时效率是最优的。</p>
+</blockquote>
+<blockquote>
+<p>例外情况：<br>当查部门的时候，如果连接用户的查询条件<br>默认是使用<code>root.get(dept).get(name)</code>的时候 会生成 cross join 语句即交叉连接<br>此时效率会大幅度降低。<br>这里表述的不一定特别清晰，总之如果是cross join 则会造成 2*2 得 4 的结果集，在结果集中进行筛选。</p>
+</blockquote>
+<p><em>怎么优化呢？</em></p>
+<p>可以参考以下伪代码 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户、部门、组织、查询条件工厂</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserPredicateFactory</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 组织条件组合</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Predicate <span class="title function_">getOrgPredicate</span><span class="params">(From&lt;?, OrganizationEntity&gt; from,</span></span><br><span class="line"><span class="params">                                            Fetch&lt;?, OrganizationEntity&gt; fetch,</span></span><br><span class="line"><span class="params">                                            CriteriaQuery&lt;?&gt; query,</span></span><br><span class="line"><span class="params">                                            CriteriaBuilder cb,</span></span><br><span class="line"><span class="params">                                            OrganizationEntity org)</span> &#123;</span><br><span class="line">        List&lt;Predicate&gt; predicates = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//未删除</span></span><br><span class="line">        predicates.add(cb.equal(from.get(del), <span class="literal">false</span>));</span><br><span class="line">        <span class="keyword">if</span> (org == <span class="literal">null</span>) &#123;</span><br><span class="line">            org = <span class="keyword">new</span> <span class="title class_">OrganizationEntity</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//ID</span></span><br><span class="line">        <span class="keyword">if</span> (org.getId() != <span class="literal">null</span>) &#123;</span><br><span class="line">            predicates.add(cb.equal(from.get(id), org.getId()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.notNull(org.getName())) &#123;</span><br><span class="line">            predicates.add(cb.like(cb.upper(from.get(name)), pattern(org.getName())));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> cb.and(predicates.toArray(<span class="keyword">new</span> <span class="title class_">Predicate</span>[predicates.size()]));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 部门条件组合</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Predicate <span class="title function_">getDeptPredicate</span><span class="params">(From&lt;?, DepartmentEntity&gt; from,</span></span><br><span class="line"><span class="params">                                             Fetch&lt;?, DepartmentEntity&gt; fetch,</span></span><br><span class="line"><span class="params">                                             CriteriaQuery&lt;?&gt; query,</span></span><br><span class="line"><span class="params">                                             CriteriaBuilder cb,</span></span><br><span class="line"><span class="params">                                             DepartmentEntity dept)</span> &#123;</span><br><span class="line"></span><br><span class="line">        List&lt;Predicate&gt; predicates = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        Fetch&lt;DepartmentEntity, OrganizationEntity&gt; fetch1 = <span class="literal">null</span>;</span><br><span class="line">        Fetch&lt;DepartmentEntity, UserEntity&gt; fetch2 = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (!Long.class.equals(query.getResultType())) &#123;</span><br><span class="line">            <span class="keyword">if</span> (fetch == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="comment">// 为空时表示由当前实体作为 from 入口</span></span><br><span class="line">                fetch1 = from.fetch(organization, JoinType.LEFT);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 表示 需要组合 left join 语句</span></span><br><span class="line">                fetch1 = fetch.fetch(organization, JoinType.LEFT);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Join&lt;DepartmentEntity, OrganizationEntity&gt; join1 = from.join(organization, JoinType.LEFT);</span><br><span class="line">        <span class="comment">//未删除</span></span><br><span class="line">        predicates.add(cb.equal(from.get(del), <span class="literal">false</span>));</span><br><span class="line">        <span class="keyword">if</span> (dept == <span class="literal">null</span>) &#123;</span><br><span class="line">            dept = <span class="keyword">new</span> <span class="title class_">DepartmentEntity</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 组织条件集合</span></span><br><span class="line">        predicates.add(getOrgPredicate(join1, fetch1, query, cb, dept.getOrganization()));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//ID</span></span><br><span class="line">        <span class="keyword">if</span> (dept.getId() != <span class="literal">null</span>) &#123;</span><br><span class="line">            predicates.add(cb.equal(from.get(id), dept.getId()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//部门名</span></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.notNull(dept.getName())) &#123;</span><br><span class="line">            predicates.add(cb.like(cb.upper(from.get(name)), pattern(dept.getName())));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cb.and(predicates.toArray(<span class="keyword">new</span> <span class="title class_">Predicate</span>[predicates.size()]));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户条件组合</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Predicate <span class="title function_">getUserPredicate</span><span class="params">(From&lt;?, UserEntity&gt; from,</span></span><br><span class="line"><span class="params">                                               Fetch&lt;?, UserEntity&gt; fetch,</span></span><br><span class="line"><span class="params">                                               CriteriaQuery&lt;?&gt; query,</span></span><br><span class="line"><span class="params">                                               CriteriaBuilder cb,</span></span><br><span class="line"><span class="params">                                               User User)</span> &#123;</span><br><span class="line">        List&lt;Predicate&gt; predicates = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        Fetch&lt;UserEntity, DepartmentEntity&gt; fetch1 = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (!Long.class.equals(query.getResultType())) &#123;</span><br><span class="line">            <span class="keyword">if</span> (fetch == <span class="literal">null</span>) &#123;</span><br><span class="line">                fetch1 = from.fetch(department, JoinType.LEFT);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                fetch1 = fetch.fetch(department, JoinType.LEFT);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Join&lt;UserEntity, DepartmentEntity&gt; join = from.join(department, JoinType.LEFT);</span><br><span class="line">        <span class="comment">//未删除</span></span><br><span class="line">        predicates.add(cb.equal(from.get(del), <span class="literal">false</span>));</span><br><span class="line">        <span class="keyword">if</span> (User == <span class="literal">null</span>) &#123;</span><br><span class="line">            User = <span class="keyword">new</span> <span class="title class_">UserEntity</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 部门条件集合</span></span><br><span class="line">        predicates.add(getDeptPredicate(join, fetch1, query, cb, User.getDepartment()));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (User.getId() != <span class="literal">null</span>) &#123;</span><br><span class="line">            predicates.add(cb.equal(from.get(id), User.getId()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.notNull(User.getName())) &#123;</span><br><span class="line">            predicates.add(cb.like(cb.upper(from.get(name)), pattern(User.getName().trim())));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cb.and(predicates.toArray(<span class="keyword">new</span> <span class="title class_">Predicate</span>[predicates.size()]));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">pattern</span><span class="params">(String param)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;%&quot;</span> + param.toUpperCase() + <span class="string">&quot;%&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后，怎么调用呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MemberService</span>&#123;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;UserEntity&gt; <span class="title function_">list</span><span class="params">(User user)</span> &#123;</span><br><span class="line">        <span class="comment">// 第二个参数是 fetch 表示是否需要迫切加载关联的实体，可在外面传入，留空则由参数自动判断。</span></span><br><span class="line">        Specification&lt;UserEntity&gt; spec = (Specification&lt;UserEntity&gt;) (root, query, cb)</span><br><span class="line">                -&gt; UserPredicateFactory.getUserPredicate(root, <span class="literal">null</span>, query, cb, user);</span><br><span class="line">        <span class="keyword">return</span> iUserRepository.findAll(spec);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h4><p>在做连接查询的核心观点如下：</p>
+<ul>
+<li>连表能少则少。动态连接，需要则连，不需要则不连。</li>
+<li>不在Entity中做业务</li>
+<li>不使用 <code>@Transient</code></li>
+<li><code>@OneToMany</code> 和 <code>@ManyToOne</code> 的参数尽量使用默认值。</li>
+</ul>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">总结：</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

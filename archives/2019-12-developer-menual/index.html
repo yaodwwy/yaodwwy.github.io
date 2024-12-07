@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>开发人员行为规范手册 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          开发人员行为规范手册
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2019年12月05日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#%E8%A7%84%E8%8C%83" class='tag'>规范</a>
+
+
+          
+        </div>
+        <p>本文记录所有在团队工作中遇到的问题及管理开发员工的行为规范</p>
+<blockquote>
+<p>想到哪儿写到哪儿，有空再整理！</p>
+</blockquote>
+<hr>
+<h2 id="产品篇"><a href="#产品篇" class="headerlink" title="产品篇"></a>产品篇</h2><h3 id="人人都是产品经理"><a href="#人人都是产品经理" class="headerlink" title="人人都是产品经理"></a>人人都是产品经理</h3><pre><code>不管你所处岗位与角色，把自己当成产品经理，那么你就是产品经理。
+# 与富人为伍，你就不会变的太穷。
+</code></pre>
+<h3 id="Agile-Software-Guide-先启阶段"><a href="#Agile-Software-Guide-先启阶段" class="headerlink" title="Agile Software Guide 先启阶段"></a>Agile Software Guide 先启阶段</h3><pre><code># 敏捷开发必经阶段（磨刀不误砍柴工）
+1、确定项目的利益相关人;
+2、沟通确定系统的业务期望与愿景;
+3、确定项目的当前状态与未来状态;
+4、确定项目的业务范围;
+5、需求分解;
+6、史诗级（Epic）到主故事级（Master）逐层划分;
+7、确定迭代开发需要的主故事列表。
+</code></pre>
+<h3 id="Brook’s-Law-布鲁克定律"><a href="#Brook’s-Law-布鲁克定律" class="headerlink" title="Brook’s Law 布鲁克定律"></a>Brook’s Law 布鲁克定律</h3><pre><code>为已经延期的软件项目增加人手只会让项目延期得更厉害。
+# Sprint 能用里程碑解决的问题就不要使用瀑布流
+</code></pre>
+<h3 id="Jira使用总结"><a href="#Jira使用总结" class="headerlink" title="Jira使用总结"></a>Jira使用总结</h3><pre><code>Jira 配置时，先配置 问题&gt;问题属性&gt;`状态`和`解决方式`
+先配置工作流，再配置工作流方案，把工作流关联到方案中
+尽量不要改Jira默认工作流及问题状态。
+</code></pre>
+<hr>
+<h2 id="开发篇"><a href="#开发篇" class="headerlink" title="开发篇"></a>开发篇</h2><h3 id="SQL服务注意事项"><a href="#SQL服务注意事项" class="headerlink" title="SQL服务注意事项"></a>SQL服务注意事项</h3><pre><code>1、所有的sql文件不得使用中文字命名；
+2、sql文件的位置必须放到 统一的Git目录对应的项目模块下，例：.dev/sql/service-name/table-name.sql；
+3、sql中不得使用DROP、RENAME命令，限制使用表或字段约束；
+4、sql文件以表名命名，如果是对字段的新增以“表名.列名.sql”命名，例：table-name.user_id.sql；
+5、update 语句必须有where条件，并严格注明业务原因；
+6、SQL文件的产生必须经过三名及以上开发人员的评审会确认；
+7、SQL文件在合并到测试分支时必须在生产中提前准备。
+</code></pre>
+<h3 id="日志是调试的最佳方式"><a href="#日志是调试的最佳方式" class="headerlink" title="日志是调试的最佳方式"></a>日志是调试的最佳方式</h3><pre><code>日志输出是一门手艺
+# CT(Computed Tomography) 
+</code></pre>
+<h3 id="导入表格数据如何增强体验"><a href="#导入表格数据如何增强体验" class="headerlink" title="导入表格数据如何增强体验"></a>导入表格数据如何增强体验</h3><pre><code>Excel批量导入时必须是以字符串输出至表单，导入时后台不验证，提交时以前端验证数据。
+# 减少后台压力，客户端能做的事，尽量在客户端做。服务端只做最终验证一致性
+</code></pre>
+<h3 id="Postel’s-Law-波斯托定律-或-鲁棒性法则"><a href="#Postel’s-Law-波斯托定律-或-鲁棒性法则" class="headerlink" title="Postel’s Law 波斯托定律 或 鲁棒性法则"></a>Postel’s Law 波斯托定律 或 鲁棒性法则</h3><pre><code>保守输出，自由输入。
+# 厚积薄发
+</code></pre>
+<h3 id="如果出现500异常开发必须无条件立即解决"><a href="#如果出现500异常开发必须无条件立即解决" class="headerlink" title="如果出现500异常开发必须无条件立即解决"></a>如果出现500异常开发必须无条件立即解决</h3><pre><code>500异常表示服务异常，表示程序的承载力不够，不能处理当前的服务。
+# 这个异常多数因为没有做到 Postel’s Law 波斯托定律
+</code></pre>
+<h3 id="Knuth’s-Optimization-Principle-克努特优化法则"><a href="#Knuth’s-Optimization-Principle-克努特优化法则" class="headerlink" title="Knuth’s Optimization Principle 克努特优化法则"></a>Knuth’s Optimization Principle 克努特优化法则</h3><pre><code>过早优化是万恶之源。
+# 先写代码，然后找出瓶颈，最后才修复！
+</code></pre>
+<h3 id="枚举类从中间插入新值在有些业务系统中是灾难"><a href="#枚举类从中间插入新值在有些业务系统中是灾难" class="headerlink" title="枚举类从中间插入新值在有些业务系统中是灾难"></a>枚举类从中间插入新值在有些业务系统中是灾难</h3><pre><code>如果你的枚举类在数据库的映射类型是int，那么默认存入的是枚举的ordinal()数值（从0开始）
+从顶部或中间插入新值将带来原来的数据状态全部错位的现象，这是一个灾难 
+</code></pre>
+<h3 id="高效的理解路径的讯息"><a href="#高效的理解路径的讯息" class="headerlink" title="高效的理解路径的讯息"></a>高效的理解路径的讯息</h3><pre><code>优雅的URI路径能让开发者减少困惑，URI定义规格：版本号/业务路径/动作
+业务路径：必须从大到小、&quot;后者是前者的&quot; 的关系例如： “模块名/分类名/子类名” 词性上一定是名词单数形式；
+         仅允许使用小写字母、数字、中划线，除模块名可以使用中划线、其它名禁止使用；
+动作：保存、删除、更新、取一个、取列表、分页取列表、提交、上传、审批…… 英语词性上一定是动词原型；
+路径参数不能使用数字以外的内容 正例：/user/page/1 能不用路径参数就不用路径参数
+例：
+v1/order/item/save
+v2/person/address/remove
+v3/member/profile/update
+v4/job/task/get
+v5/document/title/list
+v6/auth-model/client/page
+v7/cart/item/submit
+v8/item/attachment/upload
+</code></pre>
+<hr>
+<h2 id="运维篇"><a href="#运维篇" class="headerlink" title="运维篇"></a>运维篇</h2><h3 id="测试中的数据状态管理"><a href="#测试中的数据状态管理" class="headerlink" title="测试中的数据状态管理"></a>测试中的数据状态管理</h3><pre><code>使用一组固定的，有代表性且无害的数据，保证可以在每种环境中都能使用。
+每个业务点都需要判断数据是否无害冗余且困难，则不如在关键节点上做到无害化处理。
+</code></pre>
+<h3 id="测试任务不过夜"><a href="#测试任务不过夜" class="headerlink" title="测试任务不过夜"></a>测试任务不过夜</h3><pre><code>如果有一个测试任务在下班前产生 那么必须当天完成流转，不然为严重延误开发及上线进度。
+</code></pre>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A7%E5%93%81%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">产品篇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%BA%E4%BA%BA%E9%83%BD%E6%98%AF%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">人人都是产品经理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Agile-Software-Guide-%E5%85%88%E5%90%AF%E9%98%B6%E6%AE%B5"><span class="toc-number">1.2.</span> <span class="toc-text">Agile Software Guide 先启阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Brook%E2%80%99s-Law-%E5%B8%83%E9%B2%81%E5%85%8B%E5%AE%9A%E5%BE%8B"><span class="toc-number">1.3.</span> <span class="toc-text">Brook’s Law 布鲁克定律</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jira%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">Jira使用总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E7%AF%87"><span class="toc-number">2.</span> <span class="toc-text">开发篇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL%E6%9C%8D%E5%8A%A1%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">2.1.</span> <span class="toc-text">SQL服务注意事项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%98%AF%E8%B0%83%E8%AF%95%E7%9A%84%E6%9C%80%E4%BD%B3%E6%96%B9%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text">日志是调试的最佳方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E5%A6%82%E4%BD%95%E5%A2%9E%E5%BC%BA%E4%BD%93%E9%AA%8C"><span class="toc-number">2.3.</span> <span class="toc-text">导入表格数据如何增强体验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Postel%E2%80%99s-Law-%E6%B3%A2%E6%96%AF%E6%89%98%E5%AE%9A%E5%BE%8B-%E6%88%96-%E9%B2%81%E6%A3%92%E6%80%A7%E6%B3%95%E5%88%99"><span class="toc-number">2.4.</span> <span class="toc-text">Postel’s Law 波斯托定律 或 鲁棒性法则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E5%87%BA%E7%8E%B0500%E5%BC%82%E5%B8%B8%E5%BC%80%E5%8F%91%E5%BF%85%E9%A1%BB%E6%97%A0%E6%9D%A1%E4%BB%B6%E7%AB%8B%E5%8D%B3%E8%A7%A3%E5%86%B3"><span class="toc-number">2.5.</span> <span class="toc-text">如果出现500异常开发必须无条件立即解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Knuth%E2%80%99s-Optimization-Principle-%E5%85%8B%E5%8A%AA%E7%89%B9%E4%BC%98%E5%8C%96%E6%B3%95%E5%88%99"><span class="toc-number">2.6.</span> <span class="toc-text">Knuth’s Optimization Principle 克努特优化法则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE%E7%B1%BB%E4%BB%8E%E4%B8%AD%E9%97%B4%E6%8F%92%E5%85%A5%E6%96%B0%E5%80%BC%E5%9C%A8%E6%9C%89%E4%BA%9B%E4%B8%9A%E5%8A%A1%E7%B3%BB%E7%BB%9F%E4%B8%AD%E6%98%AF%E7%81%BE%E9%9A%BE"><span class="toc-number">2.7.</span> <span class="toc-text">枚举类从中间插入新值在有些业务系统中是灾难</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E6%95%88%E7%9A%84%E7%90%86%E8%A7%A3%E8%B7%AF%E5%BE%84%E7%9A%84%E8%AE%AF%E6%81%AF"><span class="toc-number">2.8.</span> <span class="toc-text">高效的理解路径的讯息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E7%BB%B4%E7%AF%87"><span class="toc-number">3.</span> <span class="toc-text">运维篇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">测试中的数据状态管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%BB%E5%8A%A1%E4%B8%8D%E8%BF%87%E5%A4%9C"><span class="toc-number">3.2.</span> <span class="toc-text">测试任务不过夜</span></a></li></ol></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

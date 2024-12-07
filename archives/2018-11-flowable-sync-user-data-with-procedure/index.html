@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Flowable6.4 通过存储过程同步用户数据 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          Flowable6.4 通过存储过程同步用户数据
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2018年11月02日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Flowable" class='tag'>Flowable</a>
+
+
+          
+        </div>
+        <p>用户数据属于业务范畴</p>
+<p>基于 <code>Activiti6</code> 或 <code>Flowable6.4</code> </p>
+<p>数据库 <code>Postgres</code> + <code>Spring Data JPA</code></p>
+<p>一、先实现存储过程</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">OR</span> REPLACE <span class="keyword">FUNCTION</span> sync_flowable_identify()</span><br><span class="line"><span class="keyword">RETURNS</span> <span class="type">NUMERIC</span></span><br><span class="line"><span class="keyword">AS</span> $$</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"></span><br><span class="line">		raise notice <span class="string">&#x27;业务用户数与Flowable用户数同步&#x27;</span>;</span><br><span class="line">		  <span class="keyword">INSERT</span> <span class="keyword">INTO</span> act_id_user(id_,rev_,first_,last_,display_name_,email_,tenant_id_)</span><br><span class="line">		  <span class="keyword">SELECT</span> username,<span class="string">&#x27;2&#x27;</span>,fullname,<span class="string">&#x27;[同步]&#x27;</span>,fullname,email,<span class="keyword">null</span> <span class="keyword">from</span> t_member <span class="keyword">where</span> username <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">SELECT</span> id_ <span class="keyword">from</span> act_id_user);</span><br><span class="line">		  <span class="keyword">update</span> act_id_user <span class="keyword">set</span> pwd_ <span class="operator">=</span> <span class="string">&#x27;123123&#x27;</span> <span class="keyword">where</span> id_ <span class="operator">=</span> <span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line"></span><br><span class="line">		raise notice <span class="string">&#x27;业务角色数与Flowable组同步&#x27;</span>;</span><br><span class="line">		  <span class="keyword">INSERT</span> <span class="keyword">INTO</span> act_id_group(id_,rev_,name_,type_)</span><br><span class="line">		  <span class="keyword">SELECT</span> <span class="keyword">distinct</span> name,<span class="number">1</span>,name,<span class="string">&#x27;assignment&#x27;</span> <span class="keyword">from</span> t_role <span class="keyword">where</span> name <span class="operator">&lt;&gt;</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> name <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">SELECT</span> id_ <span class="keyword">from</span> act_id_group);</span><br><span class="line"></span><br><span class="line">		raise notice <span class="string">&#x27;业务关系记录与Flowable关系记录同步&#x27;</span>;</span><br><span class="line">		  <span class="keyword">INSERT</span> <span class="keyword">INTO</span> act_id_membership(user_id_,group_id_)</span><br><span class="line">		  <span class="keyword">select</span> <span class="keyword">distinct</span> m.username,r.name <span class="keyword">from</span> t_member_role mr <span class="keyword">left</span> <span class="keyword">join</span> t_member m <span class="keyword">on</span> mr.member_id<span class="operator">=</span>m.id</span><br><span class="line">        <span class="keyword">left</span> <span class="keyword">join</span> t_role r <span class="keyword">on</span> mr.role_id <span class="operator">=</span> r.id <span class="keyword">where</span> m.username <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">and</span> m.username <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">select</span> user_id_ <span class="keyword">from</span> act_id_membership);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">RETURN</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line">$$ <span class="keyword">LANGUAGE</span> PLPGSQL;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> sync_flowable_identify();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>二、在用户Repo层添加调用存储过程接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">IMemberRepository</span> <span class="keyword">extends</span> <span class="title class_">JpaRepository</span>&lt;MemberEntity, Integer&gt;&#123;</span><br><span class="line">    <span class="meta">@Procedure(procedureName = &quot;sync_flowable_identify&quot;)</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">syncFlowableIdentify</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三、在业务中新增用户或组时调用同步方法 <code>syncFlowableIdentify()</code></p>
+<p>四、再用同样的方式定义修改和删除时对应的数据同步业务。</p>
+<p>补充说明：<br>Flowable的用户只是一个标识，可以使用业务系统用户的唯一名作为条件查询参数，所以没有强关系。<br>以上内容仅作为备用参考，不建议同步用户数据。</p>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>联想笔记本电脑管家实现自动签到 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          联想笔记本电脑管家实现自动签到
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2020年08月16日</time>
+          
+          
+        </div>
+        <p>联想电脑管家是买笔记时自带的内置程序，平时也用不到。<br>但是在注册为联想会员的时候，有一个签到有礼的福利。<br>连续签到可以兑换保修期。增加保修期就非常诱人了，但个人时间不允许每天去签到。<br>反正家里有一个树莓派，只有自动化一下，以后让树莓派帮我签到了。</p>
+<blockquote>
+<p>准备脚本：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">curl &#x27;https://reg.lenovo.com.cn/auth/synck/dologin?callback=*****&#x27; -b cookie.txt -c cookie.txt</span><br><span class="line">_token=$(curl -X GET &#x27;https://club.lenovo.com.cn/signlist?sts=***&#x27; -b cookie.txt -c cookie.txt | grep &#x27;CONFIG.token =&#x27; | awk -F \&quot; &#x27;&#123;print $2&#125;&#x27;)</span><br><span class="line">curl &#x27;https://club.lenovo.com.cn/sign&#x27; --data-raw &#x27;_token=&#x27;$_token -b cookie.txt -c cookie.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>脚本说明：</p>
+</blockquote>
+<ul>
+<li>第一个<code>*****</code>隐藏的内容是在电脑管家点击《签到有礼》的时候的默认跳转链接。断网后点击可以得到；</li>
+<li>第二个<code>***</code>隐藏的是点击《签到有礼》后自动跳转的新链接；</li>
+<li>-b cookie.txt 表示 载入cookie文件；</li>
+<li>-c cookie.txt 表示 写入cookie文件；</li>
+<li>grep ‘CONFIG.token &#x3D;’ 表示在&#x2F;signlist页面从服务后台写到静态页上的token；</li>
+<li>awk -F &quot; ‘{print $2}’ 表示 -F &quot; 指定分隔符为引号 print $2 是awk打印第二个字段就是token内容；</li>
+<li>最有，有了cookie和token就可以签到了。</li>
+</ul>
+<h4 id="设置定时"><a href="#设置定时" class="headerlink" title="设置定时"></a>设置定时</h4><p>适用于 debian</p>
+<p>crontab -l #查看定时列表<br>crontab -e #编辑定时列表</p>
+<pre><code>01 1 * * * /bin/sh /root/autosign.sh &gt;&gt; /root/sign.log 2&gt;&amp;1
+</code></pre>
+<p>&#x2F;etc&#x2F;init.d&#x2F;cron restart #重启定时服务</p>
+<p>完。</p>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%AE%9A%E6%97%B6"><span class="toc-number">1.</span> <span class="toc-text">设置定时</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>树莓派4B快速入门 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          树莓派4B快速入门
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2020年12月14日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tags"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Raspberrypi" class='tag'>Raspberrypi</a>
+
+  <a href="/tags/#%E6%A0%91%E8%8E%93%E6%B4%BE" class='tag'>树莓派</a>
+
+
+          
+        </div>
+        <p>使用 Raspbian 系统有段时间了，一直没有记录过日志，现在把脚本和实践汇总一下。</p>
+<h4 id="概况"><a href="#概况" class="headerlink" title="概况"></a>概况</h4><pre><code>官方下载的镜像环境：
+Linux raspberrypi 5.4.79-v7l+
+</code></pre>
+<h4 id="Raspbian官方地址"><a href="#Raspbian官方地址" class="headerlink" title="Raspbian官方地址"></a>Raspbian官方地址</h4><pre><code>https://www.raspberrypi.org/software/
+</code></pre>
+<p>可以使用Raspberry Pi Imager将镜像写入卡</p>
+<h4 id="使用wifi连接"><a href="#使用wifi连接" class="headerlink" title="使用wifi连接"></a>使用wifi连接</h4><p>创建 <code>wpa_supplicant.conf</code> 放到sd卡根目录可以直接内容如下 ：</p>
+<pre><code>    country=CN
+    ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+    update_config=1
+    
+    network=&#123;
+        ssid=&quot;填写wifi的名字&quot;
+        psk=&quot;填写wifi的密码&quot;
+        priority=5
+    &#125;
+    network=&#123;
+        ssid=&quot;填写wifi的名字&quot;
+        psk=&quot;填写wifi的密码&quot;
+        priority=4
+    &#125;
+    
+</code></pre>
+<h4 id="ssh登录"><a href="#ssh登录" class="headerlink" title="ssh登录"></a>ssh登录</h4><p>新建空白<code>ssh</code>文件放到sd卡根目录</p>
+<pre><code>pi:raspberry@raspberrypi
+</code></pre>
+<h4 id="清华源参考如下"><a href="#清华源参考如下" class="headerlink" title="清华源参考如下"></a>清华源参考如下</h4><p>记得备份</p>
+<pre><code>https://mirrors.tuna.tsinghua.edu.cn/help/raspbian/
+</code></pre>
+<h4 id="查看附近的无线网络"><a href="#查看附近的无线网络" class="headerlink" title="查看附近的无线网络"></a>查看附近的无线网络</h4><pre><code>sudo iwlist wlan0 scan
+</code></pre>
+<h4 id="查看信号强度"><a href="#查看信号强度" class="headerlink" title="查看信号强度"></a>查看信号强度</h4><pre><code>iwconfig wlan0
+</code></pre>
+<h4 id="土壤湿度传感器"><a href="#土壤湿度传感器" class="headerlink" title="土壤湿度传感器"></a>土壤湿度传感器</h4><p>接上YL-69 土壤湿度模块的正负和信号线 （脚1+ 脚9- 脚19D）</p>
+<p>使用 python 读湿度数据 参考脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># coding=UTF-8</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">import RPi.GPIO as g</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    g.setmode(g.BOARD)</span><br><span class="line">    g.setup(19, g.IN)</span><br><span class="line">    while True:</span><br><span class="line">        if g.input(19) == 1:</span><br><span class="line">            print(&quot;干燥, 请适当浇水！&quot;)</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;土壤环境潮湿&quot;)</span><br><span class="line">        time.sleep(1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="温度传感器"><a href="#温度传感器" class="headerlink" title="温度传感器"></a>温度传感器</h4><p>在 <code>/boot/config.txt</code> 文件中增加 <code>dtoverlay=dht11,gpiopin=4</code><br>然后接上dht11传感器的正负和信号线 （脚1+ 脚9- 脚4D）</p>
+<p>参考地址: </p>
+<pre><code>https://pinout.xyz/pinout/1_wire
+</code></pre>
+<p>使用 python 读温度数据 参考脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def currentTEMP(temp):</span><br><span class="line">    tmp = float(temp)</span><br><span class="line">    if tmp != 0:</span><br><span class="line">        tmp = tmp / 1000</span><br><span class="line">    return tmp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def currentHumidity(humidity):</span><br><span class="line">    tmp = float(humidity)</span><br><span class="line">    if tmp != 0:</span><br><span class="line">        tmp = tmp / 1000</span><br><span class="line">    return tmp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    info = &#123;&#125;</span><br><span class="line">    TEMP = 0</span><br><span class="line">    HUMIDITY = 0</span><br><span class="line">    id = 0</span><br><span class="line">    while True:</span><br><span class="line">        try:</span><br><span class="line">            TEMP = open(&#x27;/sys/bus/iio/devices/iio:device0/in_temp_input&#x27;).read()</span><br><span class="line">            HUMIDITY = open(&#x27;/sys/bus/iio/devices/iio:device0/in_humidityrelative_input&#x27;).read()</span><br><span class="line">            TEMP = currentTEMP(TEMP)</span><br><span class="line">            HUMIDITY = currentHumidity(HUMIDITY)</span><br><span class="line">            id = id + 1</span><br><span class="line">            info[&quot;id&quot;] = id</span><br><span class="line">            info[&quot;temp&quot;] = &quot;%.2f&quot; % TEMP</span><br><span class="line">            info[&quot;humidity&quot;] = &quot;%.2f&quot; % HUMIDITY</span><br><span class="line">            jsonstr = json.dumps(info)</span><br><span class="line">            print(jsonstr)</span><br><span class="line">            time.sleep(1)</span><br><span class="line">        except:</span><br><span class="line">            time.sleep(1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用-linux-dash-监控系统信息"><a href="#使用-linux-dash-监控系统信息" class="headerlink" title="使用 linux-dash 监控系统信息"></a>使用 linux-dash 监控系统信息</h4><pre><code>git clone https://github.com/afaqurk/linux-dash.git
+sudo python linux-dash/app/server/index.py
+
+访问 http://raspberrypi/#/system-status 查看
+</code></pre>
+<h4 id="加载USB模块及挂载硬件"><a href="#加载USB模块及挂载硬件" class="headerlink" title="加载USB模块及挂载硬件"></a>加载USB模块及挂载硬件</h4><pre><code>modprobe usb-storage
+fdisk -l 看看U盘的设备
+mkdir /mnt/usb
+mount  /dev/sda*   /mnt/usb
+</code></pre>
+<h2 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续"></a>未完待续</h2>
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A6%82%E5%86%B5"><span class="toc-number">1.</span> <span class="toc-text">概况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Raspbian%E5%AE%98%E6%96%B9%E5%9C%B0%E5%9D%80"><span class="toc-number">2.</span> <span class="toc-text">Raspbian官方地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8wifi%E8%BF%9E%E6%8E%A5"><span class="toc-number">3.</span> <span class="toc-text">使用wifi连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ssh%E7%99%BB%E5%BD%95"><span class="toc-number">4.</span> <span class="toc-text">ssh登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%85%E5%8D%8E%E6%BA%90%E5%8F%82%E8%80%83%E5%A6%82%E4%B8%8B"><span class="toc-number">5.</span> <span class="toc-text">清华源参考如下</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E9%99%84%E8%BF%91%E7%9A%84%E6%97%A0%E7%BA%BF%E7%BD%91%E7%BB%9C"><span class="toc-number">6.</span> <span class="toc-text">查看附近的无线网络</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%BF%A1%E5%8F%B7%E5%BC%BA%E5%BA%A6"><span class="toc-number">7.</span> <span class="toc-text">查看信号强度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%9F%E5%A3%A4%E6%B9%BF%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8"><span class="toc-number">8.</span> <span class="toc-text">土壤湿度传感器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%A9%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8"><span class="toc-number">9.</span> <span class="toc-text">温度传感器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-linux-dash-%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF"><span class="toc-number">10.</span> <span class="toc-text">使用 linux-dash 监控系统信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BDUSB%E6%A8%A1%E5%9D%97%E5%8F%8A%E6%8C%82%E8%BD%BD%E7%A1%AC%E4%BB%B6"><span class="toc-number">11.</span> <span class="toc-text">加载USB模块及挂载硬件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD"><span class="toc-number"></span> <span class="toc-text">未完待续</span></a>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

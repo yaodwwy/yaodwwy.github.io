@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>信息安全相关知识图 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          信息安全相关知识图
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2020年03月17日</time>
+          
+          
+        </div>
+        <p>本文涉及信息安全三级题目中出现的技术词汇，用于记录与翻译成白话文。</p>
+<h3 id="2020-03-17"><a href="#2020-03-17" class="headerlink" title="2020-03-17"></a>2020-03-17</h3><p>Kerberos</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6469473-e704be80985da1cc.jpg"></p>
+<pre><code>一种网络认证协议
+一种认证标准，通过使用一台中央服务器来提供“票据”，供其他在网络上提供资源的服务器进行识别。在Windows 2000, XP, Server 2003, Vista, 以及Longhorn, 还有UNIX系统，都对它进行支持。
+
+AS（Authentication Server）= 认证服务器
+KDC（Key Distribution Center）= 密钥分发中心
+TGT（Ticket Granting Ticket）= 票据授权票据，票据的票据
+TGS（Ticket Granting Server）= 票据授权服务器
+SS（Service Server）= 特定服务提供端
+</code></pre>
+<h4 id="对称密码"><a href="#对称密码" class="headerlink" title="对称密码"></a>对称密码</h4><pre><code>“恺撒（Caesar）”密码
+简单替换密码到较复杂构造方式
+
+分组密码 Block Cipher
+    DES,AES,IDEA
+    IBM 开发的密码 DES 已被广泛使用
+序列密码 Stream Cipher
+    流密码 RC4,SEAL
+</code></pre>
+<h4 id="ECC"><a href="#ECC" class="headerlink" title="ECC"></a>ECC</h4><pre><code>Error Correcting Code
+指能够实现错误检查和纠正错误技术的内存
+</code></pre>
+<p>####引导程序</p>
+<h5 id="GRUB"><a href="#GRUB" class="headerlink" title="GRUB"></a>GRUB</h5><pre><code>GRand Unified Bootloader
+选择操作系统分区上的不同内核，也可用于向这些内核传递启动参数
+Linux、BSD Unix类的操作系统中GRUB、LILO 最为常用
+Windows也有类似的工具NTLOADER
+早期采用PowerPC架构的Apple机使用的是yaboot引导
+</code></pre>
+<h5 id="Lilo"><a href="#Lilo" class="headerlink" title="Lilo"></a>Lilo</h5><pre><code>LILO（LInux Loader)
+Linux引导程序。LILO是一个在系统启动时运行的程序，它用于选择引导计算机启动的操作系统。
+</code></pre>
+<h5 id="Spfdisk"><a href="#Spfdisk" class="headerlink" title="Spfdisk"></a>Spfdisk</h5><pre><code>SPFDisk（SPecialFDisk） 是一套磁盘分割工具与启动管理程式（Boot Manager）
+</code></pre>
+<h4 id="RARP"><a href="#RARP" class="headerlink" title="RARP"></a>RARP</h4><pre><code>反向地址转换协议 Reverse Address Resolution Protocol
+局域网的物理机器从网关服务器的 ARP 表或者缓存上请求其 IP 地址的协议
+</code></pre>
+<h4 id="SSL"><a href="#SSL" class="headerlink" title="SSL"></a>SSL</h4><pre><code>Secure Sockets Layer 安全套接层
+包含两个协议子层：记录协议（为高层协议提供基本的安全服务）握手协议（协调客户和服务器的状态，使双方能够达到状态的同步）
+</code></pre>
+<h4 id="inetd"><a href="#inetd" class="headerlink" title="inetd"></a>inetd</h4><pre><code>互联网服务守护程序
+许多提供Internet服务的Unix系统上的超级服务器守护程序。
+对于每个已配置的服务，它侦听来自连接客户端的请求。
+</code></pre>
+<p>ESP（Extended Stack Pointer）为扩展栈指针寄存器，是指针寄存器的一种，用于存放函数栈顶指针。<br>与之对应的是EBP（Extended Base Pointer），扩展基址指针寄存器，也被称为帧指针寄存器，用于存放函数栈底指针。</p>
+<h4 id="ASLR"><a href="#ASLR" class="headerlink" title="ASLR"></a>ASLR</h4><pre><code>Address space layout randomization
+地址空间配置随机加载（英语：Address space layout randomization，缩写ASLR，又称地址空间配置随机化、地址空间布局随机化）是一种防范内存损坏漏洞被利用的计算机安全技术。
+</code></pre>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#2020-03-17"><span class="toc-number">1.</span> <span class="toc-text">2020-03-17</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text">对称密码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ECC"><span class="toc-number">1.2.</span> <span class="toc-text">ECC</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#GRUB"><span class="toc-number">1.2.1.</span> <span class="toc-text">GRUB</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Lilo"><span class="toc-number">1.2.2.</span> <span class="toc-text">Lilo</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Spfdisk"><span class="toc-number">1.2.3.</span> <span class="toc-text">Spfdisk</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RARP"><span class="toc-number">1.3.</span> <span class="toc-text">RARP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSL"><span class="toc-number">1.4.</span> <span class="toc-text">SSL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#inetd"><span class="toc-number">1.5.</span> <span class="toc-text">inetd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ASLR"><span class="toc-number">1.6.</span> <span class="toc-text">ASLR</span></a></li></ol></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

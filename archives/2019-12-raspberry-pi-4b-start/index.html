@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Raspberry Pi 实践 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          Raspberry Pi 实践
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2019年12月31日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tags"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Raspberrypi" class='tag'>Raspberrypi</a>
+
+  <a href="/tags/#%E6%A0%91%E8%8E%93%E6%B4%BE" class='tag'>树莓派</a>
+
+
+          
+        </div>
+        <p>老规矩，我在中国，于是更新镜像源 详见： <a href="https://www.adbyte.cn/archives/linux-in-China/">https://www.adbyte.cn/archives/linux-in-China/</a> </p>
+<hr>
+<h4 id="Raspberry-Pi-CPU温度监控器"><a href="#Raspberry-Pi-CPU温度监控器" class="headerlink" title="Raspberry Pi CPU温度监控器"></a>Raspberry Pi CPU温度监控器</h4><p>Raspberry Pi基金会建议Raspberry Pi设备的温度应低于85摄氏度。为保证正常工作，将在82度开始降频。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span> <span class="string">&quot;%-20s%10s\n&quot;</span> <span class="string">&quot;TIMESTAMP&quot;</span> <span class="string">&quot;TEMP(C)&quot;</span></span><br><span class="line"><span class="built_in">printf</span> <span class="string">&quot;%-30s\n&quot;</span> <span class="string">&quot;-------------------------------&quot;</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    temp=$(vcgencmd measure_temp | egrep -o <span class="string">&#x27;[0-9]*\.[0-9]*&#x27;</span>)</span><br><span class="line">    timestamp=$(<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%dT%H:%M:%S&quot;</span>)</span><br><span class="line">    <span class="built_in">printf</span> <span class="string">&quot;%-20s%10s\n&quot;</span> <span class="string">&quot;<span class="variable">$timestamp</span>&quot;</span> <span class="string">&quot;<span class="variable">$temp</span>&quot;</span></span><br><span class="line">    <span class="built_in">sleep</span> 5</span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$&#123;temp&#125;</span> &gt; 60 ]] ; <span class="keyword">then</span></span><br><span class="line">        curl <span class="string">&quot;https://sc.ftqq.com/&#123;密钥 这一段用于方糖提醒到手机端&#125;.send?text=RaspberryPi温度过高&amp;desp=当前温度：<span class="variable">$temp</span>°C 发生时间：<span class="variable">$timestamp</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 以上内容存为 tempmon.sh 文件执行后可见以下效果：</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># pi@raspbian:~$ ./tempmon.sh  </span></span><br><span class="line"><span class="comment"># TIMESTAMP              TEMP(C)</span></span><br><span class="line"><span class="comment"># -------------------------------</span></span><br><span class="line"><span class="comment"># 2020-01-02 15:44:25       40.0</span></span><br><span class="line"><span class="comment"># 2020-01-02 15:44:27       39.0</span></span><br><span class="line"><span class="comment"># 2020-01-02 15:44:30       40.0</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Raspberry-Pi-外接硬盘相关操作"><a href="#Raspberry-Pi-外接硬盘相关操作" class="headerlink" title="Raspberry Pi 外接硬盘相关操作"></a>Raspberry Pi 外接硬盘相关操作</h4><p>df 显示目前在Linux系统上的文件系统的磁盘使用情况统计</p>
+<p>lsblk 命令 列出所有可用块设备的信息</p>
+<p>fdisk命令用于观察硬盘实体使用情况，也可对硬盘分区。</p>
+<pre><code>fdisk -l
+</code></pre>
+<p>挂载NTFS硬盘</p>
+<pre><code>mount -t ntfs-3g /dev/sda /mnt/sda
+# 或
+ntfs-3g /dev/sda /mnt/sda1
+# 重启自动挂载
+echo &quot;/dev/sda /mnt ext4 defaults 0 0&quot; &gt;&gt; /etc/fstab
+</code></pre>
+<p>partprobe可以使kernel重新读取分区信息 从而避免重启系统</p>
+<p>!!! mkfs -t ext4 &#x2F;dev&#x2F;sda !!!<br>    mkfs.ext3 &#x2F;dev&#x2F;sda<br>以上命令会格式化设备成ext3、ext4文件系统!</p>
+<h4 id="Raspberry-Pi-Docker中运行openwrt系统"><a href="#Raspberry-Pi-Docker中运行openwrt系统" class="headerlink" title="Raspberry Pi Docker中运行openwrt系统"></a>Raspberry Pi Docker中运行openwrt系统</h4><p>docker run –restart always –name openwrt -d –network macnet –privileged -v &#x2F;mnt:&#x2F;mnt yaodwwy&#x2F;openwrt:latest &#x2F;sbin&#x2F;init</p>
+<pre><code># 宿主机网络配置参考
+auto eth0
+iface eth0 inet manual
+dns-nameservers 192.168.1.1
+
+auto macvlan
+iface macvlan inet static
+
+address 192.168.1.70
+netmask 255.255.255.0
+gateway 192.168.1.1
+dns-nameservers 192.168.1.1
+pre-up ip link add macvlan link eth0 type macvlan mode bridge
+post-down ip link del macvlan link eth0 type macvlan mode bridge
+
+# 如遇网络问题可以检查一下文件
+/etc/network/interfaces
+dns-nameservers
+/etc/resolv.conf
+nameserver 192.168.1.1
+</code></pre>
+<blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://linuxhint.com/raspberry_pi_temperature_monitor/">https://linuxhint.com/raspberry_pi_temperature_monitor/</a><br>参考：<a target="_blank" rel="noopener" href="https://mlapp.cn/376.html">https://mlapp.cn/376.html</a></p>
+</blockquote>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Raspberry-Pi-CPU%E6%B8%A9%E5%BA%A6%E7%9B%91%E6%8E%A7%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">Raspberry Pi CPU温度监控器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Raspberry-Pi-%E5%A4%96%E6%8E%A5%E7%A1%AC%E7%9B%98%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">Raspberry Pi 外接硬盘相关操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Raspberry-Pi-Docker%E4%B8%AD%E8%BF%90%E8%A1%8Copenwrt%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.</span> <span class="toc-text">Raspberry Pi Docker中运行openwrt系统</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

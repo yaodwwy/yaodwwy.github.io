@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>面向过程和面向对象编程之间的差异 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          面向过程和面向对象编程之间的差异
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2020年04月24日</time>
+          
+          
+        </div>
+        <h5 id="面向过程编程："><a href="#面向过程编程：" class="headerlink" title="面向过程编程："></a>面向过程编程：</h5><p>面向过程编程是基于调用过程的概念从结构化编程发展的编程模式。<br>过程(Procedures)，也称为例程，子例程或函数，<br>仅包含要执行的一系列步骤，在程序执行期间，过程会被严格按序调用。</p>
+<h5 id="面向过程编程中使用的语言："><a href="#面向过程编程中使用的语言：" class="headerlink" title="面向过程编程中使用的语言："></a>面向过程编程中使用的语言：</h5><pre><code>FORTRAN, ALGOL, COBOL, 
+BASIC, Pascal and C. 
+</code></pre>
+<h5 id="面向对象编程："><a href="#面向对象编程：" class="headerlink" title="面向对象编程："></a>面向对象编程：</h5><p>Object oriented programming can be defined as a programming model which is based upon the concept of objects.<br>Objects contain data in the form of attributes and code in the form of methods.<br>In object oriented programming, computer programs are designed using the concept of objects that interact with real world.<br>Object oriented programming languages are various but the most popular ones are class-based,<br>meaning that objects are instances of classes, which also determine their types.<br>面向对象编程可以定义为基于对象概念的编程模型。对象包含属性形式的数据和方法形式的代码。在面向对象的编程中，<br>计算机程序是使用与现实世界交互的对象的概念来设计的。面向对象的编程语言多种多样，但最流行的是基于类的，<br>这意味着对象是类的实例，它们也决定了它们的类型。</p>
+<h5 id="Languages-used-in-Object-Oriented-Programming"><a href="#Languages-used-in-Object-Oriented-Programming" class="headerlink" title="Languages used in Object Oriented Programming:"></a>Languages used in Object Oriented Programming:</h5><pre><code>Java, C++, C#, Python, 
+PHP, JavaScript, Ruby, Perl, 
+Objective-C, Dart, Swift, Scala.
+</code></pre>
+<h5 id="Difference-between-Procedural-Programming-and-Object-Oriented-Programming"><a href="#Difference-between-Procedural-Programming-and-Object-Oriented-Programming" class="headerlink" title="Difference between Procedural Programming and Object Oriented Programming:"></a>Difference between Procedural Programming and Object Oriented Programming:</h5><table>
+<thead>
+<tr>
+<th align="center">PROCEDURAL ORIENTED PROGRAMMING</th>
+<th align="center">OBJECT ORIENTED PROGRAMMING</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">In procedural programming, program is divided into small parts called functions.</td>
+<td align="center">In object oriented programming, program is divided into small parts called objects.</td>
+</tr>
+<tr>
+<td align="center">Procedural programming follows top down approach.</td>
+<td align="center">Object oriented programming follows bottom up approach.</td>
+</tr>
+<tr>
+<td align="center">There is no access specifier in procedural programming.</td>
+<td align="center">Object oriented programming have access specifiers like private, public, protected etc.</td>
+</tr>
+<tr>
+<td align="center">Adding new data and function is not easy.</td>
+<td align="center">Adding new data and function is easy.</td>
+</tr>
+<tr>
+<td align="center">Procedural programming does not have any proper way for hiding data so it is less secure.</td>
+<td align="center">Object oriented programming provides data hiding so it is more secure.</td>
+</tr>
+<tr>
+<td align="center">In procedural programming, overloading is not possible.</td>
+<td align="center">Overloading is possible in object oriented programming.</td>
+</tr>
+<tr>
+<td align="center">In procedural programming, function is more important than data.</td>
+<td align="center">In object oriented programming, data is more important than function.</td>
+</tr>
+<tr>
+<td align="center">Procedural programming is based on unreal world.</td>
+<td align="center">Object oriented programming is based on real world.</td>
+</tr>
+<tr>
+<td align="center">Examples: C, FORTRAN, Pascal, Basic etc.</td>
+<td align="center">Examples: C++, Java, Python, C# etc.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>原文参考：<a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/differences-between-procedural-and-object-oriented-programming/">https://www.geeksforgeeks.org/differences-between-procedural-and-object-oriented-programming/</a></p>
+</blockquote>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%BC%96%E7%A8%8B%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">面向过程编程：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%9A%84%E8%AF%AD%E8%A8%80%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">面向过程编程中使用的语言：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">面向对象编程：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Languages-used-in-Object-Oriented-Programming"><span class="toc-number">4.</span> <span class="toc-text">Languages used in Object Oriented Programming:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Difference-between-Procedural-Programming-and-Object-Oriented-Programming"><span class="toc-number">5.</span> <span class="toc-text">Difference between Procedural Programming and Object Oriented Programming:</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

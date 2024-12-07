@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>常用的中国镜像源 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          常用的中国镜像源
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2023年06月02日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#%E9%95%9C%E5%83%8F%E5%BA%93" class='tag'>镜像库</a>
+
+
+          
+        </div>
+        <div class="paragraph">
+<p>OPSX 开源镜像站，提供 CentOS、Debian、Ubuntu、 Fedora、Arch Linux、Gentoo、openSUSE、Scientific Linux 等主流发行版的软件源镜像。</p>
+</div>
+<div class="paragraph">
+<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/mirror/">阿里开发者镜像仓库</a></p>
+</div>
+<div class="sect2">
+<h3 id="_anaconda_镜像仓库">Anaconda 镜像仓库</h3>
+<div class="paragraph">
+<p>先执行 <code>conda config --set show_channel_urls yes</code> 生成该文件之后再修改</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>channels:
+  - defaults
+show_channel_urls: true
+default_channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+custom_channels:
+  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch-lts: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>即可添加 <code>Anaconda Python</code> 免费仓库。</p>
+</div>
+<div class="paragraph">
+<p>运行 <code>conda clean -i</code> 清除索引缓存，保证用的是镜像站提供的索引。</p>
+</div>
+<div class="paragraph">
+<p>运行 <code>conda create -n myenv numpy</code> 测试一下吧。</p>
+</div>
+<div class="paragraph">
+<p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/" class="bare">https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/</a></p>
+</div>
+<div class="sect3">
+<h4 id="_maven仓库地址配置">Maven仓库地址配置</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">settings</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">mirrors</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">mirror</span>&gt;</span>
+            <span class="tag">&lt;<span class="name">id</span>&gt;</span>alimaven<span class="tag">&lt;/<span class="name">id</span>&gt;</span>
+            <span class="tag">&lt;<span class="name">name</span>&gt;</span>aliyun maven<span class="tag">&lt;/<span class="name">name</span>&gt;</span>
+            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span>
+            <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span>
+        <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span>
+    <span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">settings</span>&gt;</span></code></pre></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pip源配置">Pip源配置</h4>
+<div class="paragraph">
+<p>Linux</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>~/.pip/pip.conf</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Windows</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>%APPDATA%/pip/pip.ini</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-pip.ini" data-lang="pip.ini"><pre><code class="highlight pip.ini">[global]
+trusted-host = mirrors.aliyun.com
+index-url = http://mirrors.aliyun.com/pypi/simple/</code></pre></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nodejs源配置">NodeJs源配置</h4>
+<div class="paragraph">
+<p>修改源地址为淘宝 NPM 镜像</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>npm config set registry http://registry.npm.taobao.org/</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>修改源地址为官方源</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>npm config set registry https://registry.npmjs.org/</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>推荐使用定制的 cnpm (gzip 压缩支持) 命令行工具代替默认的 npm:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>npm install -g cnpm --registry=https://registry.npm.taobao.org</pre>
+</div>
+</div>
+</div>
+</div>
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#_anaconda_%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">Anaconda 镜像仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#_maven%E4%BB%93%E5%BA%93%E5%9C%B0%E5%9D%80%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text">Maven仓库地址配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#_pip%E6%BA%90%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.</span> <span class="toc-text">Pip源配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#_nodejs%E6%BA%90%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">NodeJs源配置</span></a></li></ol></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

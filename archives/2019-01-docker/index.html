@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Docker开发汇总 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          Docker开发汇总
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2019年01月23日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Docker" class='tag'>Docker</a>
+
+
+          
+        </div>
+        <p>　　本篇针对Docker18.09.0常用开发，配置，环境搭建等使用细节汇总。</p>
+<h3 id="Docker环境篇"><a href="#Docker环境篇" class="headerlink" title="Docker环境篇"></a>Docker环境篇</h3><blockquote>
+<p>查看已安装的docker </p>
+</blockquote>
+<pre><code>$ rpm -qa | grep docker
+</code></pre>
+<blockquote>
+<p>卸载旧版本(如果存在)</p>
+</blockquote>
+<pre><code>$ sudo yum remove docker \
+              docker-client \
+              docker-client-latest \
+              docker-common \
+              docker-latest \
+              docker-latest-logrotate \
+              docker-logrotate \
+              docker-selinux \
+              docker-engine-selinux \
+              docker-engine
+</code></pre>
+<blockquote>
+<p>Linux 源安装</p>
+</blockquote>
+<pre><code>yum install -y yum-utils device-mapper-persistent-data lvm2
+#设置Docker存储库，可以从存储库安装和更新Docker
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+yum makecache fast
+# 安装最新版本的Docker CE
+yum -y install docker-ce
+# 启动Docker
+systemctl start docker
+</code></pre>
+<h4 id="Docker-Machine"><a href="#Docker-Machine" class="headerlink" title="Docker Machine:"></a>Docker Machine:</h4><pre><code>docker-machine create --driver virtualbox \
+ --engine-registry-mirror=https://kfwkfulq.mirror.aliyuncs.com \
+ --virtualbox-boot2docker-url=./boot2docker.iso docker
+</code></pre>
+<blockquote>
+<p>boot2docker.iso下载地址：</p>
+</blockquote>
+<pre><code>https://github.com/boot2docker/boot2docker/releases
+</code></pre>
+<h4 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose:"></a>Docker Compose:</h4><p>下载安装文件：</p>
+<pre><code>$ sudo curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose
+</code></pre>
+<p>给已下载的安装文件添加执行权限：</p>
+<pre><code>$ sudo chmod +x /usr/bin/docker-compose
+</code></pre>
+<p>测试是否安装成功：</p>
+<pre><code>$ docker-compose --version
+</code></pre>
+<hr>
+<h3 id="Docker环境篇之Elasticsearch"><a href="#Docker环境篇之Elasticsearch" class="headerlink" title="Docker环境篇之Elasticsearch"></a>Docker环境篇之Elasticsearch</h3><blockquote>
+<p>更新为国内Docker镜像（加速）</p>
+</blockquote>
+<pre><code>sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json &lt;&lt;-&#39;EOF&#39;
+&#123;
+  &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;]
+&#125;
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+</code></pre>
+<blockquote>
+<p>设置虚拟内存空间</p>
+</blockquote>
+<pre><code>## 宿主机 grep vm.max_map_count /etc/sysctl.conf
+## 如果为空 则 echo vm.max_map_count=262144 &gt;&gt;/etc/sysctl.conf
+## 临时生效方式:
+sysctl -w vm.max_map_count=262144
+</code></pre>
+<blockquote>
+<p>拉取并启动Elasticsearch</p>
+</blockquote>
+<pre><code>docker run -p 9200:9200 -p 9300:9300 -it \
+--name elasticsearch elasticsearch
+</code></pre>
+<blockquote>
+<p>停止Elasticsearch运行容器</p>
+</blockquote>
+<pre><code>docker stop elasticsearch
+</code></pre>
+<blockquote>
+<p>再启动Elasticsearch运行容器</p>
+</blockquote>
+<pre><code>docker start elasticsearch
+</code></pre>
+<h4 id="从外网SSH进Docker"><a href="#从外网SSH进Docker" class="headerlink" title="从外网SSH进Docker"></a>从外网SSH进Docker</h4><pre><code>docker exec -it elasticsearch bash
+</code></pre>
+<blockquote>
+<p>在容器内安装SSH服务</p>
+</blockquote>
+<pre><code>apt install -y openssh-server
+</code></pre>
+<blockquote>
+<p>配置sshd文件</p>
+</blockquote>
+<pre><code>echo &#39;PermitRootLogin yes&#39; &gt;&gt;/etc/ssh/sshd_config
+echo &#39;UsePAM no&#39; &gt;&gt;/etc/ssh/sshd_config
+</code></pre>
+<blockquote>
+<p>更新密码</p>
+</blockquote>
+<pre><code>passwd
+123456
+123456
+</code></pre>
+<blockquote>
+<p>重启ssh</p>
+</blockquote>
+<pre><code>service ssh restart
+    
+# docker version
+Client:
+ Version:           18.09.0
+ API version:       1.39
+ Go version:        go1.10.4
+ Git commit:        4d60db4
+ Built:             Wed Nov  7 00:48:22 2018
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          18.09.0
+  API version:      1.39 (minimum version 1.12)
+  Go version:       go1.10.4
+  Git commit:       4d60db4
+  Built:            Wed Nov  7 00:19:08 2018
+  OS/Arch:          linux/amd64
+  Experimental:     false
+</code></pre>
+<blockquote>
+<p>如果与此环境一至可以开启一场Docker之旅了!</p>
+</blockquote>
+<hr>
+<h3 id="系统配置篇"><a href="#系统配置篇" class="headerlink" title="系统配置篇"></a>系统配置篇</h3><blockquote>
+<p>开启远程管理Docker2375端口</p>
+<blockquote>
+<p>禁止公网未加密方式开放2375<br>必须使用TSL的HTTPS连接，不然就…</p>
+</blockquote>
+</blockquote>
+<p>   <a target="_blank" rel="noopener" href="http://adbyte.cn/files/tlscert.sh">证书生成脚本</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给脚本添加运行权限</span></span><br><span class="line"><span class="built_in">chmod</span> +x tlscert.sh</span><br><span class="line">HOST_IP=127.0.0.1</span><br><span class="line">./tlscert.sh <span class="variable">$HOST_IP</span></span><br><span class="line"><span class="comment"># 客户端需要的证书保存在client目录下, 服务端需要的证书保存在server目录下</span></span><br><span class="line">D_S=/usr/lib/systemd/system/docker.service</span><br><span class="line">sed -i <span class="string">&#x27;s|ExecStart=/usr/bin/dockerd -H unix://|EnvironmentFile=-/etc/default/docker\nExecStart=/usr/bin/dockerd  -H unix:// $DOCKER_OPTS|&#x27;</span> <span class="variable">$D_S</span></span><br><span class="line">grep ExecStart <span class="variable">$D_S</span></span><br><span class="line">grep EnvironmentFile <span class="variable">$D_S</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;DOCKER_OPTS=&quot;--selinux-enabled&#x27;</span> \</span><br><span class="line"><span class="string">&#x27;--tlsverify --tlscacert=/etc/docker/ca.pem&#x27;</span> \</span><br><span class="line"><span class="string">&#x27;--tlscert=/etc/docker/server-cert.pem&#x27;</span> \</span><br><span class="line"><span class="string">&#x27;--tlskey=/etc/docker/server-key.pem&#x27;</span> \</span><br><span class="line"><span class="string">&#x27;-H=unix:///var/run/docker.sock&#x27;</span> \</span><br><span class="line"><span class="string">&#x27;-H=0.0.0.0:2375&quot;&#x27;</span> &gt; /etc/default/docker</span><br><span class="line">grep DOCKER_OPTS /etc/default/docker</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;******************  重启操作提示  ******************&quot;</span></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p>复制脚本自动生成的client证书文件到客户端文件目录如IDEA</p>
+<p><img src="/img/idea-docker-Api.png" alt="Idea配置方式"><br><img src="/img/idea-dockerApi-pgsql.png" alt="Idea配置完成"></p>
+<hr>
+<h3 id="数据操作篇"><a href="#数据操作篇" class="headerlink" title="数据操作篇"></a>数据操作篇</h3><blockquote>
+<p>备份及恢复卷</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 挂载data并在data中新建测试文件</span></span><br><span class="line">docker run -it -v /data --name cow docker/whalesay</span><br><span class="line"><span class="built_in">echo</span> testFile &gt; /data/test.txt</span><br><span class="line"><span class="comment"># 新建容器并挂载测试卷并操作备份</span></span><br><span class="line">docker run -it --privileged=<span class="literal">true</span> --volumes-from cow -v $(<span class="built_in">pwd</span>):/backup --name temp docker/whalesay tar cvf /backup/backup.tar /data</span><br><span class="line"><span class="comment"># 新建容器并新建卷后操作恢复</span></span><br><span class="line">docker run -it --privileged=<span class="literal">true</span> -v /data -v $(<span class="built_in">pwd</span>):/backup --name cow2 docker/whalesay</span><br><span class="line"><span class="comment"># 解压backup目录下backup.tar到data/即可完成恢复</span></span><br><span class="line"><span class="built_in">cd</span> / &amp;&amp; tar -xvf /backup/backup.tar</span><br><span class="line"><span class="comment"># docker/whalesay 是一个很好玩的镜像,可以去pull下来试试</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="容器部署篇"><a href="#容器部署篇" class="headerlink" title="容器部署篇"></a>容器部署篇</h3><h4 id="Docker-compose方式部署"><a href="#Docker-compose方式部署" class="headerlink" title="Docker-compose方式部署"></a>Docker-compose方式部署</h4><h3 id="已启动的容器如何设置自动启动"><a href="#已启动的容器如何设置自动启动" class="headerlink" title="已启动的容器如何设置自动启动"></a>已启动的容器如何设置自动启动</h3><pre><code>docker update --restart=always &lt;container&gt;
+</code></pre>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker%E7%8E%AF%E5%A2%83%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">Docker环境篇</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker-Machine"><span class="toc-number">1.1.</span> <span class="toc-text">Docker Machine:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker-Compose"><span class="toc-number">1.2.</span> <span class="toc-text">Docker Compose:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker%E7%8E%AF%E5%A2%83%E7%AF%87%E4%B9%8BElasticsearch"><span class="toc-number">2.</span> <span class="toc-text">Docker环境篇之Elasticsearch</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8E%E5%A4%96%E7%BD%91SSH%E8%BF%9BDocker"><span class="toc-number">2.1.</span> <span class="toc-text">从外网SSH进Docker</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E7%AF%87"><span class="toc-number">3.</span> <span class="toc-text">系统配置篇</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C%E7%AF%87"><span class="toc-number">4.</span> <span class="toc-text">数据操作篇</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2%E7%AF%87"><span class="toc-number">5.</span> <span class="toc-text">容器部署篇</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker-compose%E6%96%B9%E5%BC%8F%E9%83%A8%E7%BD%B2"><span class="toc-number">5.1.</span> <span class="toc-text">Docker-compose方式部署</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%B2%E5%90%AF%E5%8A%A8%E7%9A%84%E5%AE%B9%E5%99%A8%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8"><span class="toc-number">6.</span> <span class="toc-text">已启动的容器如何设置自动启动</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

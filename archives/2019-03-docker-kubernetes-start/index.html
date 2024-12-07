@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>从Docker到Kubernetes入门 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          从Docker到Kubernetes入门
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2019年03月25日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tags"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Docker" class='tag'>Docker</a>
+
+  <a href="/tags/#Kubernetes" class='tag'>Kubernetes</a>
+
+
+          
+        </div>
+        <p>Vagrant是一个基于Ruby的工具，用于创建和部署虚拟化开发环境。它使用Oracle的开源VirtualBox虚拟化系统，使用 Chef创建自动化虚拟环境。</p>
+<h3 id="功能特性："><a href="#功能特性：" class="headerlink" title="功能特性："></a>功能特性：</h3><blockquote>
+<blockquote>
+<p>支持快速新建虚拟机<br> 支持快速设置端口转发<br> 支持自定义镜像打包（原始镜像方式、增量补丁方式）<br> 基本上日常能用到的基础配置都能快速设置<br> 支持开机启动自动运行命令<br> 可以自己写扩展</p>
+</blockquote>
+</blockquote>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><pre><code>$ vagrant init      # 初始化
+$ vagrant init centos/7      # 初始化 centos7 作为基包的虚拟化环境
+
+$ vagrant up        # 启动虚拟机
+$ vagrant halt      # 关闭虚拟机
+$ vagrant reload    # 重启虚拟机
+$ vagrant ssh       # SSH 至虚拟机
+$ vagrant suspend   # 挂起虚拟机
+$ vagrant resume    # 唤醒虚拟机
+$ vagrant status    # 查看虚拟机运行状态
+$ vagrant destroy   # 销毁当前虚拟机
+</code></pre>
+<h4 id="box管理命令"><a href="#box管理命令" class="headerlink" title="box管理命令"></a>box管理命令</h4><pre><code>$ vagrant box list    # 查看本地box列表
+$ vagrant box add     # 添加box到列表
+
+下载直接用
+wget download-url
+当你下载完毕以后，使用
+vagrant box add centos/7 path/to/xx.box
+
+$ vagrant box remove  # 从box列表移除 
+</code></pre>
+<hr>
+<p>Docker Machine 是 Docker 官方提供的一个工具，它可以帮助我们在远程的机器上安装 Docker，或者在虚拟机 host 上直接安装虚拟机并在虚拟机中安装 Docker。我们还可以通过 docker-machine 命令来管理这些虚拟机和 Docker。</p>
+<h3 id="docker-machine命令："><a href="#docker-machine命令：" class="headerlink" title="docker-machine命令："></a>docker-machine命令：</h3><pre><code>help 查看帮助信息
+active 查看活动的Docker主机
+config 输出连接的配置信息
+create 创建一个Docker主机
+$ docker-machine create -d hyperv --hyperv-virtual-switch &quot;ExtSwitch&quot; node2
+$ docker-machine create -d virtualbox test
+env 显示连接到某个主机需要的环境变量
+$ docker-machine env node2  # 查询环境变量可以定义本地指向的服务
+
+inspect 输出主机更新信息
+ip 获取Docker主机地址
+kill 停止某个Docker主机
+ls 列出所有管理的Docker主机
+regenerate-certs 为某个主机重新成功TLS认证信息
+restart 重启Docker主机
+rm 删除Docker主机
+scp 在Docker主机之间复制文件
+ssh SSH到主机上执行命令
+$ docker-machine ssh node2
+
+start 启动一个主机
+status 查看一个主机状态
+stop 停止一个主机
+upgrade 更新主机Docker版本为最新
+url 获取主机的URL
+</code></pre>
+<hr>
+<p>删除所有容器</p>
+<pre><code>$ docker rm $(docker container ls -aq)
+</code></pre>
+<p>列出容器列表信息第一列</p>
+<pre><code>$ docker container ls -a | awk &#123;&#39;print$1&#39;&#125;
+</code></pre>
+<p>删除已退出的容器</p>
+<pre><code>$ docker rm $(docker container ls -f &quot;status=exited&quot; -q)
+</code></pre>
+<hr>
+<p>提交已经修改的容器作为新镜像</p>
+<p>$ docker commit 容器名 映像名:版本</p>
+<p>全新制作新镜像</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> centos</span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum install -y vim</span></span><br></pre></td></tr></table></figure>
+
+<p>FROM scratch # 制作base image<br>LABEL maintainer&#x3D;””<br>LABEL version&#x3D;””<br>LABEL description&#x3D;””<br>WORKDIR “&#x2F;“ # 尽量使用绝对路径<br>ENV MYSQL_VERSION 5.6 # 设置常量<br>RUN apt-get install -y mysql-ser&#x3D;”$(MYSQL_VERSION)” <br>&amp;&amp; rm -rf &#x2F;var&#x2F;lib&#x2F;apt&#x2F;lists&#x2F;* # 清理</p>
+<p>RUN:执行命令并创建新的Image Layer<br>CMD:设置容器启动后默认执行的命令和参数<br>ENTRYPOINT:设置容器启动时运行的命令</p>
+<blockquote>
+<p>Shell 格式</p>
+</blockquote>
+<pre><code>RUN apt-get install -y vim
+CMD echo &quot;hello docker&quot;
+ENTRYPOINT echo &quot;hello docker&quot;
+</code></pre>
+<blockquote>
+<p>Exec格式</p>
+</blockquote>
+<pre><code>RUN [&quot;apt-get&quot;,&quot;install&quot;,&quot;-y&quot;,&quot;vim&quot;]
+CMD [&quot;/bin/echo&quot;,&quot;hello docker&quot;]
+ENTRYPOINT[&quot;/bin/echo&quot;,&quot;hello docker&quot;]
+</code></pre>
+<p>Exec格式下变量传递<br>FROM centos<br>ENV name Docker<br>ENTRYPOINT [“&#x2F;bin&#x2F;bash”,”-c”,”echo hello $name”]</p>
+<p>docker build -t 10.0.0.205:500&#x2F;hello-world .</p>
+<hr>
+<figure class="highlight python"><figcaption><span>app.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello docker&quot;</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FORM python:<span class="number">2.7</span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> <span class="string">&quot;maintainer=Adam&lt;yaodwwy@gmail.com&gt;&quot;</span></span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> pip install flask</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> app.py /app/</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">5000</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;python&quot;</span>,<span class="string">&quot;app.py&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+
+<p>docker build -t 10.0.0.205:500&#x2F;hello-docker .</p>
+<blockquote>
+<p>修改已经存在的container的重启策略</p>
+</blockquote>
+<pre><code>docker update --restart=always &lt;container id&gt;
+</code></pre>
+<p>docker exec -it node2 ip a</p>
+<hr>
+<blockquote>
+<p>容器资源限制</p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu</span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y stress</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;/usr/bin/stress&quot;</span>]</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> []</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>docker run -it yaodwwy&#x2F;ubuntu-stress –vm 1</p>
+<blockquote>
+<p>以Debug方式运行压力测试</p>
+</blockquote>
+<p>docker run -it yaodwwy&#x2F;ubuntu-stress –vm 1 –verbose</p>
+<p>docker run -it –memory&#x3D;200M yaodwwy&#x2F;ubuntu-stress –vm 1 –verbose</p>
+<hr>
+<blockquote>
+<p>网络命名空间</p>
+</blockquote>
+<p>docker run -d –name test1 busybox &#x2F;bin&#x2F;sh -c “while true; do sleep 3600; done”</p>
+<p>ip netns list</p>
+<p>brctl show<br>yum install -y bridge-utils</p>
+<hr>
+<p>docker swarm init –help</p>
+<p>docker service ls<br>docker service ps demo<br>docker service scale demo&#x3D;5</p>
+<p>docker run –link 容器名 直接使用容器未暴露的端口</p>
+<hr>
+<h3 id="数据持久化之Data-Volume"><a href="#数据持久化之Data-Volume" class="headerlink" title="数据持久化之Data Volume"></a>数据持久化之Data Volume</h3><hr>
+<p>docker volume ls<br>docker volume prune<br>docker volume inspect XXX</p>
+<hr>
+<p>Docker Compose 三大概念<br>services | networks | volumes</p>
+<hr>
+<h3 id="9"><a href="#9" class="headerlink" title="9"></a>9</h3><p>minikube start<br>kubectl config views<br>kubectl config get-contexts<br>kubectl cluster-info<br>minikube ssh</p>
+<p>kubectl create -f xxx.yml<br>kubectl delete -f xxx.yml<br>kubectl get pods<br>kubectl get pods -o wide<br>kubectl exec -it xxx sh<br>kubectl describe pods nginx<br>kubectl port-forward nginx 8080:80</p>
+<hr>
+<p>kubectl get rc<br>kubectl get pods<br>kubectl delete pods nginx-xxxxx<br>kubectl scale rc nginx<br>kubectl scale rc nginx –replicas&#x3D;2</p>
+<hr>
+<p>kubectl get deployment<br>kubectl get rs<br>kubectl get deployment -o wide</p>
+<blockquote>
+<p>升级版本<br>kubectl set image deployment nginx-deployment nginx&#x3D;nginx:1.13<br>查看版本历史<br>kubectl rollout history deployment nginx-deployment<br>回滚版本<br>kubectl rollout undo deployment nginx-deployment</p>
+</blockquote>
+<hr>
+<p>kubectl get node -o wide<br>kubectl delete service nginx-deployment<br>kubectl expose deployment nginx-deployment –type&#x3D;NodePort<br>kubectl get svc</p>
+<hr>
+<p>kubectl config get-contects<br>kubectl config use-context tectonic<br>kubectl get node</p>
+<blockquote>
+<p>自动补全<br>source &lt;(kubectl completion zsh)</p>
+</blockquote>
+<p>kubectl expose pods nginx-pod<br>kubectl get svc</p>
+<blockquote>
+<p>编辑服务yml</p>
+</blockquote>
+<p>kubectl edit deployment test-api2</p>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E7%89%B9%E6%80%A7%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">功能特性：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text">常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#box%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-number">2.1.</span> <span class="toc-text">box管理命令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-machine%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">docker-machine命令：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E4%B9%8BData-Volume"><span class="toc-number">4.</span> <span class="toc-text">数据持久化之Data Volume</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9"><span class="toc-number">5.</span> <span class="toc-text">9</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

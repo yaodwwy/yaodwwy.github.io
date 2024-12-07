@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>在Centos中使用cups连接打印机 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          在Centos中使用cups连接打印机
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2024年01月24日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tags"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#HP" class='tag'>HP</a>
+
+  <a href="/tags/#EPSON" class='tag'>EPSON</a>
+
+  <a href="/tags/#Centos" class='tag'>Centos</a>
+
+  <a href="/tags/#CUPS" class='tag'>CUPS</a>
+
+  <a href="/tags/#Linux%E6%89%93%E5%8D%B0%E6%9C%BA" class='tag'>Linux打印机</a>
+
+
+          
+        </div>
+        <p>Centos下安装Cups可以连接各种打印机进行打印，笔者有遇到乱码的情况:<br><a target="_blank" rel="noopener" href="https://ubuntuforums.org/showthread.php?t=2309122">Printing to remote CUPS server from Windows prints “@PJL” code</a></p>
+<p>尝试从linux下直接打印文件是正常的。判断问题出在从windows编码到linux解码再编码的过程中。</p>
+<blockquote>
+<p>安装</p>
+</blockquote>
+<pre><code># 安装软件
+yum install cups -y
+# 查看状态
+systemctl status cups
+systemctl enable cups
+# 启动服务
+systemctl start cups
+# 开启远程访问
+cupsctl --remote-any
+# 重启服务
+systemctl restart cups
+
+### 如果是树莓派 将用户pi设为管理员
+sudo usermod -a -G lpadmin pi
+</code></pre>
+<blockquote>
+<p>安装驱动</p>
+</blockquote>
+<pre><code>sudo apt-get install hplip
+</code></pre>
+<blockquote>
+<p>linux系统下直接打印测试</p>
+</blockquote>
+<pre><code>lp -d printer_name filename
+</code></pre>
+<p>笔者使用的是 hp136w 激光打印机，远程管理地址如下：</p>
+<p><a target="_blank" rel="noopener" href="https://10.0.0.2:631/admin/">https://10.0.0.2:631/admin/</a></p>
+<p>Add Printer </p>
+<p>官方提供了驱动安装脚本（注意正确选择操作系统）</p>
+<p><a target="_blank" rel="noopener" href="https://support.hp.com/cn-zh/drivers/hp-laser-mfp-130-printer-series/model/24494391?sku=4ZB86A">https://support.hp.com/cn-zh/drivers/hp-laser-mfp-130-printer-series/model/24494391?sku=4ZB86A</a></p>
+<p>打印机地址如下：</p>
+<p><a target="_blank" rel="noopener" href="http://10.0.0.2:631/printers/HP_Laser_MFP_131_133_135-138">http://10.0.0.2:631/printers/HP_Laser_MFP_131_133_135-138</a></p>
+<p>Windows11下手动连接打印机，注意下图：</p>
+<p>Windows下不需要安装打印驱动：<br><img src="/../img/win-hp-136w.png" alt="win-hp-136w.png"></p>
+<p>直接使用IPP驱动：<br><img src="/../img/win-ipp-driver.png" alt="win-ipp-driver.png"></p>
+<p>说明：IPP代表Internet Printing Protocol（网络打印协议）是一种用于打印机和打印服务之间通信的标准协议。<br>Microsoft IPP Class Driver是指Microsoft开发的用于与IPP打印机进行通信的类驱动程序。</p>
+<p>所以从Windows发送到Linux打印 解决乱码问题 必须从协议入手。<br>出现乱码现象：</p>
+<pre><code>-12345X@PJL COMMONT &quot;USERNAME: Admin&quot;
+@PJL COMMONT USERNAME=&quot;Admin&quot;
+@PJL XCPT &lt;xpif version=&quot;1.0&quot; cpss-version=&quot;2.07&quot; xml:lang=&quot;en-US&quot;&gt;
+@PJL XCPT     &lt;job-template-attributes&gt;
+[...]
+@PJL COMMENT DCPVer: DSPY 5.433.6.1
+@PJL XCPT ENTER LANGUAGE=PCLXL
+) HP-PCL XL;3.0;Comment Copyright © 2000-2015 Xerox Corporation. All Rights Reserved.
+jX
+...
+@PJL ENTER LANGUAGE = QPDL
+</code></pre>
+<p>苹果手机 IOS 隔空打印</p>
+<pre><code>yum install cups-client cups-filters cups-ipp-utils avahi-daemon printer-driver-gutenprint -y
+</code></pre>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

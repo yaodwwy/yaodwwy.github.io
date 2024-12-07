@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>SpringCloud微服务快速填坑小记 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          SpringCloud微服务快速填坑小记
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2018年06月28日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tags"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#Spring%20Cloud" class='tag'>Spring Cloud</a>
+
+  <a href="/tags/#spring" class='tag'>spring</a>
+
+
+          
+        </div>
+        <p>本文针对 <a target="_blank" rel="noopener" href="https://blog.csdn.net/forezp/article/details/70148833">史上最简单的 SpringCloud 教程 | 终章</a> 进行了版本升级和测试，测试过程中发现作者故意遗留很多问题(或是因版本升级出现)，导致不能直接成功测试的问题进行了修复和填坑。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><pre><code>Java 10 (VM options: --add-modules java.xml.bind)
+Gradle 4.7
+Spring Cloud Finchley.RELEASE 
+Spring boot 2.0.3
+</code></pre>
+<blockquote>
+<p>提前说明</p>
+</blockquote>
+<pre><code>Java9 / java10 可能会遇到这个异常：
+ClassNotFoundException: javax.xml.bind.JAXBException
+配置 VM options: --add-modules java.xml.bind 即可
+</code></pre>
+<h2 id="Spring-boot-Run-Dashboard-测试顺序"><a href="#Spring-boot-Run-Dashboard-测试顺序" class="headerlink" title="Spring boot Run Dashboard 测试顺序"></a>Spring boot Run Dashboard 测试顺序</h2><blockquote>
+<p>第一篇： 服务的注册与发现（Eureka）</p>
+</blockquote>
+<pre><code>启动 EurekaServer    访问 http://localhost:8761/
+启动 EurekaClientApp    访问 http://localhost:8762/?name=adam
+</code></pre>
+<blockquote>
+<p>第二篇: 服务消费者（rest+ribbon  启动：服务端1个，发现端2个，负载均衡端1个）</p>
+</blockquote>
+<pre><code>启动 EurekaServer    访问 http://localhost:8761/
+
+在Dashboard中Copy Configuration 
+Name: EurekaClientApp-0 
+VM options: --add-modules java.xml.bind -Dserver.port=8762
+启动 EurekaClientApp-0     访问 http://localhost:8762/?name=adam
+
+再Copy EurekaClientApp-1 端口改为8763
+启动 EurekaClientApp-1     访问 http://localhost:8763/?name=adam
+
+启动 RibbonBalance     访问 http://localhost:8764/?name=adam
+</code></pre>
+<blockquote>
+<p>第三篇：服务消费者（Feign）</p>
+</blockquote>
+<pre><code>启动上一篇的前三个（服务端1个，发现端2个）
+启动 FeignBalance     访问 http://localhost:8765/?name=adam
+</code></pre>
+<p>可同时运行的项目列表：</p>
+<p><img src="http://adbyte.cn/img/running.png" alt="Running"></p>
+<blockquote>
+<p>第四篇:断路器（Hystrix）</p>
+</blockquote>
+<pre><code>启动 RibbonHystrixApp     
+暂停其中一个发现端  
+访问 http://localhost:8766/?name=adam
+</code></pre>
+<p>如图：<br><img src="http://adbyte.cn/img/pause.png" alt="pause"></p>
+<blockquote>
+<p>第五篇: 路由网关(zuul)</p>
+</blockquote>
+<pre><code>启动 ZuulApp
+访问 http://localhost:8769/ribbon/?name=adam&amp;token=adam_token
+访问 http://localhost:8769/feign/?name=adam&amp;token=adam_token
+</code></pre>
+<blockquote>
+<p>第六篇: 分布式配置中心(Spring Cloud Config)</p>
+</blockquote>
+<pre><code>启动 ConfigServerApp    访问 http://localhost:8888/config-client-dev.properties
+启动 ConfigClientApp    访问 http://localhost:8881/
+</code></pre>
+<blockquote>
+<p>第七篇: 高可用的分布式配置中心(Spring Cloud Config)</p>
+</blockquote>
+<pre><code>启动 ConfigEurekaServer    访问 http://localhost:8889/config-eureka-client-dev.properties
+启动 ConfigEurekaClient    访问 http://localhost:8887/
+</code></pre>
+<p>在读取配置文件不再写ip地址，而是服务名，这时如果配置服务部署多份，通过负载均衡高可用。<br><img src="http://adbyte.cn/img/config-instances.png" alt="配置文件实例"></p>
+<blockquote>
+<p>第八篇: 消息总线(Spring Cloud Bus)</p>
+</blockquote>
+<pre><code>在上一篇基础上(ribbitMQ需要自行搭建)
+修改Git上的配置文件
+重新读取配置文件    POST http://localhost:8887/actuator/refresh
+</code></pre>
+<blockquote>
+<p>第九篇: 服务链路追踪(Spring Cloud Sleuth)</p>
+</blockquote>
+<pre><code>下载zipkin
+curl -sSL https://zipkin.io/quickstart.sh | bash -s
+启动 java -jar zipkin.jar
+访问 http://localhost:9411
+启动 ZipkinServiceHi
+启动 ZipkinServiceMiya 访问 http://localhost:8989/hi?name=adam
+*************************************************************
+zipkin测试一至未发现服务，此测试暂未通过！
+下一步测试 spring boot admin 用于监控
+</code></pre>
+<blockquote>
+<p>第十篇: 高可用的服务注册中心</p>
+</blockquote>
+<pre><code>停止 EurekaServer
+在Dashboard中对EurekaServer  Copy Configuration 
+Name: EurekaServerPeer-0
+VM options: --add-modules java.xml.bind -Dspring.profiles.active=peer0
+启动 EurekaServerPeer-0
+重复再复制一份
+Name: EurekaServerPeer-1
+VM options: --add-modules java.xml.bind -Dspring.profiles.active=peer1
+启动 EurekaServerPeer-1    
+配置host:
+    127.0.0.1 peer1
+    127.0.0.1 peer0
+访问 http://localhost:8761/
+访问 http://localhost:8771/
+</code></pre>
+<p>未完待续~</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><h3 id="服务的注册与发现-Eureka"><a href="#服务的注册与发现-Eureka" class="headerlink" title="服务的注册与发现 Eureka"></a>服务的注册与发现 Eureka</h3><pre><code>新版的Cloud(Finchley.RELEASE)使用如下的依赖地址
+compile(&#39;org.springframework.cloud:spring-cloud-starter-netflix-eureka-client&#39;)
+
+注解 `@EnableEurekaClient` ,
+需要注意 Eureka 的 Application 实例名不可以有下划线 `_` 
+</code></pre>
+<h3 id="服务消费者-rest-ribbon"><a href="#服务消费者-rest-ribbon" class="headerlink" title="服务消费者 rest + ribbon"></a>服务消费者 rest + ribbon</h3><p>eureka-client 在IDEA中启动多个的方法：</p>
+<pre><code>1、复制一个启动配置
+2、在编辑界面取消勾选 `Single instance only`
+3、VM options ： -Dserver.port=新的端口号
+</code></pre>
+<h3 id="服务链路追踪-Spring-Cloud-Sleuth"><a href="#服务链路追踪-Spring-Cloud-Sleuth" class="headerlink" title="服务链路追踪(Spring Cloud Sleuth)"></a>服务链路追踪(Spring Cloud Sleuth)</h3><p>   新版的Cloud(Finchley.RELEASE)已经没有Zipkin的<code>@EnableZipkinServer</code>注解了。<br>   官网提供的启动方式如下：</p>
+<pre><code class="bash">curl -sSL https://zipkin.io/quickstart.sh | bash -s
+java -jar zipkin.jar
+</code></pre>
+<p>   如果需要源码编译启动：</p>
+<pre><code class="bash"># get the latest source
+git clone https://github.com/openzipkin/zipkin
+cd zipkin
+# Build the server and also make its dependencies
+./mvnw -DskipTests --also-make -pl zipkin-server clean install
+# Run the server
+java -jar ./zipkin-server/target/zipkin-server-*exec.jar   
+</code></pre>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zipkin.io/pages/quickstart">Zipkin 官网参考</a></p>
+</blockquote>
+<h3 id="断路器-Hystrix"><a href="#断路器-Hystrix" class="headerlink" title="断路器 Hystrix"></a>断路器 Hystrix</h3><p>断路器 Hystrix Dashboard 出现：<br>hystrix dashboard Unable to connect to Command Metric Stream 异常提示</p>
+<p>依赖:</p>
+<pre><code>compile(&#39;org.springframework.boot:spring-boot-starter-actuator&#39;)
+//在ribbon使用断路器
+compile(&#39;org.springframework.cloud:spring-cloud-starter-netflix-hystrix&#39;)
+//在ribbon使用断路器仪表盘
+compile(&#39;org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard&#39;)
+</code></pre>
+<p>配置：</p>
+<pre><code>@EnableHystrix
+@EnableHystrixDashboard
+</code></pre>
+<p>注册servlet（基于Cloud版本Finchley需要）：</p>
+<pre><code>@Bean
+public ServletRegistrationBean getServlet() &#123;
+    HystrixMetricsStreamServlet streamServlet = new HystrixMetricsStreamServlet();
+    ServletRegistrationBean registrationBean = new ServletRegistrationBean(streamServlet);
+    registrationBean.setLoadOnStartup(1);
+    registrationBean.addUrlMappings(&quot;/hystrix.stream&quot;);
+    registrationBean.setName(&quot;HystrixMetricsStreamServlet&quot;);
+    return registrationBean;
+&#125;
+</code></pre>
+<h3 id="高可用的分布式配置中心-Spring-Cloud-Config"><a href="#高可用的分布式配置中心-Spring-Cloud-Config" class="headerlink" title="高可用的分布式配置中心 Spring Cloud Config"></a>高可用的分布式配置中心 Spring Cloud Config</h3><p>如果出现配置文件的值无法获取的异常，Injection of autowired dependencies failed<br>Could not resolve placeholder ‘foo’ in value “${foo}”</p>
+<p>检查git配置文件中心的repo目录下，有没有对应名字的文件：</p>
+<pre><code>config-eureka-client-dev.properties
+对应以下的应用名：
+spring.application.name=config-eureka-client
+
+config-client-dev.properties
+对应以下的应用名：
+spring.application.name=config-client
+</code></pre>
+<p>以上都是基于Finchley版本环境。</p>
+<p>填坑完成后的测试版本：<a target="_blank" rel="noopener" href="https://github.com/yaodwwy/spring-cloud-tutorials">https://github.com/yaodwwy/spring-cloud-tutorials</a></p>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-boot-Run-Dashboard-%E6%B5%8B%E8%AF%95%E9%A1%BA%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text">Spring boot Run Dashboard 测试顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0-Eureka"><span class="toc-number">3.1.</span> <span class="toc-text">服务的注册与发现 Eureka</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%B6%88%E8%B4%B9%E8%80%85-rest-ribbon"><span class="toc-number">3.2.</span> <span class="toc-text">服务消费者 rest + ribbon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Spring-Cloud-Sleuth"><span class="toc-number">3.3.</span> <span class="toc-text">服务链路追踪(Spring Cloud Sleuth)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%AD%E8%B7%AF%E5%99%A8-Hystrix"><span class="toc-number">3.4.</span> <span class="toc-text">断路器 Hystrix</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83-Spring-Cloud-Config"><span class="toc-number">3.5.</span> <span class="toc-text">高可用的分布式配置中心 Spring Cloud Config</span></a></li></ol></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

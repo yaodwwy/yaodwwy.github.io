@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="keywords" content="关注信息技术,关心程序研发">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <title>Spring Boot validation 验证框架 | Adam&#39;s byte</title>
+  <meta name="description" content="个人技术研究站">
+  
+<link rel="stylesheet" href="/style.css">
+
+  
+<link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--统计-->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3ExycyMbRG3eXZIm",ck:"3ExycyMbRG3eXZIm",autoTrack:true,hashMode:true})</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>Adam's byte</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/navi/" class="item-link">导航</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about/" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives/" class="item-link">文章</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+    <!--顶部加载条-->
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+    <style>
+        .pace .pace-progress {
+            background: #1E92FB; /*进度条颜色*/
+            height: 3px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #1E92FB;    /*上边框颜色*/
+            border-left-color: #1E92FB;    /*左边框颜色*/
+        }
+    </style>
+    <!--顶部加载条完-->
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+      <section class="content markdown-body">
+        <h1>
+          Spring Boot validation 验证框架
+        </h1>
+        <div class='post-meta'>
+          <i class="fa fa-calendar"
+            aria-hidden="true"></i> <time>
+            2020年05月12日</time>
+          
+          
+          |
+          
+          <i class="fa fa-tag"
+            aria-hidden="true"></i>
+          
+          
+  <a href="/tags/#spring" class='tag'>spring</a>
+
+
+          
+        </div>
+        <p>使用 Spring Boot 验证框架简化业务代码。</p>
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>Spring Boot 的验证框架，<br>一如既往没有重复造轮子，<br>集成的是Bean Validation 和 Hibernate Validator 规范，<br>Bean Validation 2.0已经集成到 Jakarta EE中，<br>也就是以前的 JAVA EE 企业版，<br>Validation核心思想是，一次约束，随处验证，<br>有了验证框架 就不用在控制层、服务层和数据层，<br>代码中重复验证参数了，<br>那我们开始吧。</p>
+<p>新建测试项目，</p>
+<p>选择你喜欢的JDK版本，</p>
+<p>使用Spring Initializr 初始化器，<br>使用阿里云的服务器会快很多<br><a target="_blank" rel="noopener" href="https://start.aliyun.com/">https://start.aliyun.com/</a></p>
+<p>选择 Developer Tools 中的 Spring Boot DevTools 和 Lombok，<br>选择 Web中的 Spring Web，<br>选择 Ops中的 Spring Boot Actuator </p>
+<p>选择 I&#x2F;O中的 Validation 也是今天的主角。</p>
+<p>下一步，给项目起名字，<br>完成。</p>
+<p>等待依赖加载完成，<br>（建议使用国内镜像加速）</p>
+<p>新建模型类，<br>添加普通字段，<br>加入验证注解，</p>
+<p>这里解释一下，<br>foobar是计算机程序领域里的术语，<br>就像我们说的张三、李四，仅用于演示名称。<br>foobar最早在计算机领域使用的是麻省理工学院的黑客组织，<br>表示的是高低电平，是一种控制开关，<br>后来美国DEC公司把Foobar写到系统手册里就被慢慢传开了，<br>Intel也开始把Foo写进文档，<br>Google用foobar.withgoogle.com用来招人，<br>后来DEC被康柏收购，康柏又被惠普收购，<br>说到惠普应该都认识了。<br>怎么样，涨知识吧，关注一波吧！<br>回到正题。</p>
+<p>设置地区为中国，<br>验证消息就指定了中文语言配置文件。</p>
+<pre><code>spring.mvc.locale=zh
+</code></pre>
+<p>参数中 标记验证注解，开启级联验证。</p>
+<pre><code>@Valid (javax 标准注解)
+@Validated (Spring 扩展了JSR-303规范的注解)
+</code></pre>
+<p>增加方法参数 绑定验证结果接口，</p>
+<pre><code>BindingResult results
+</code></pre>
+<p>处理验证结果。</p>
+<pre><code>if (results.hasErrors()) &#123;
+    // do something
+&#125;
+    
+</code></pre>
+<p>开始测试！</p>
+<p>全部校验成功！</p>
+<p>Bean Validation 2.0默认支持22种约束注解，<br>主要包括非空、断言、数值正负范围，<br>日期范围、邮件及强大的正则表达式。<br>自定义注解也非常简单，<br>一个注解类 + 约束验证器即可，<br>更多深入细节可以clone视频下方的demo示例，<br>包含自定义注解，统一参数异常处理，<br>服务层及数据层验证方法。</p>
+<blockquote>
+<p>参考链接: <a target="_blank" rel="noopener" href="https://beanvalidation.org/2.0/spec/">https://beanvalidation.org/2.0/spec/</a></p>
+</blockquote>
+<pre><code>// 内容来自 ValidationMessages_zh_CN.properties 文件
+
+// Java 标准包注解：javax.validation.constraints.*
+@AssertFalse = 只能为false
+@AssertTrue = 只能为true
+@DecimalMax = 必须小于或等于&#123;value&#125;
+@DecimalMin = 必须大于或等于&#123;value&#125;
+@Digits = 数字的值超出了允许范围(只允许在&#123;integer&#125;位整数和&#123;fraction&#125;位小数范围内)
+@Email = 不是一个合法的电子邮件地址
+@Future = 需要是一个将来的时间
+@FutureOrPresent = 需要是一个将来或现在的时间
+@Max = 最大不能超过&#123;value&#125;
+@Min = 最小不能小于&#123;value&#125;
+@Negative = 必须是负数
+@NegativeOrZero = 必须是负数或零
+@NotBlank = 不能为空
+@NotEmpty = 不能为空
+@NotNull = 不能为null
+@Null = 必须为null
+@Past = 需要是一个过去的时间
+@PastOrPresent = 需要是一个过去或现在的时间
+@Pattern = 需要匹配正则表达式&quot;&#123;regexp&#125;&quot;
+@Positive = 必须是正数
+@PositiveOrZero = 必须是正数或零
+@Size = 个数必须在&#123;min&#125;和&#123;max&#125;之间
+
+// Hibernate 扩展注解：org.hibernate.validator.constraints.*
+@CreditCardNumber = 不合法的信用卡号码
+@Currency = 不合法的货币 (必须是&#123;value&#125;其中之一)
+@EAN = 不合法的&#123;type&#125;条形码
+@Email= 不是一个合法的电子邮件地址
+@Length = 长度需要在&#123;min&#125;和&#123;max&#125;之间
+@CodePointLength = 长度需要在&#123;min&#125;和&#123;max&#125;之间
+@LuhnCheck = $&#123;validatedValue&#125;的校验码不合法, Luhn模10校验和不匹配
+@Mod10Check = $&#123;validatedValue&#125;的校验码不合法, 模10校验和不匹配
+@Mod11Check = $&#123;validatedValue&#125;的校验码不合法, 模11校验和不匹配
+@ModCheck = $&#123;validatedValue&#125;的校验码不合法, &#123;modType&#125;校验和不匹配
+@NotBlank = 不能为空
+@NotEmpty = 不能为空
+@ParametersScriptAssert = 执行脚本表达式&quot;&#123;script&#125;&quot;没有返回期望结果
+@Range= 需要在&#123;min&#125;和&#123;max&#125;之间
+@SafeHtml = 可能有不安全的HTML内容
+@ScriptAssert = 执行脚本表达式&quot;&#123;script&#125;&quot;没有返回期望结果
+@URL = 需要是一个合法的URL
+@DurationMax = 必须小于$&#123;inclusive == true ? &#39;或等于&#39; : &#39;&#39;&#125;$&#123;days == 0 ? &#39;&#39; : days += &#39;天&#39;&#125;$&#123;hours == 0 ? &#39;&#39; : hours += &#39;小时&#39;&#125;$&#123;minutes == 0 ? &#39;&#39; : minutes += &#39;分钟&#39;&#125;$&#123;seconds == 0 ? &#39;&#39; : seconds += &#39;秒&#39;&#125;$&#123;millis == 0 ? &#39;&#39; : millis += &#39;毫秒&#39;&#125;$&#123;nanos == 0 ? &#39;&#39; : nanos += &#39;纳秒&#39;&#125;
+@DurationMin = 必须大于$&#123;inclusive == true ? &#39;或等于&#39; : &#39;&#39;&#125;$&#123;days == 0 ? &#39;&#39; : days += &#39;天&#39;&#125;$&#123;hours == 0 ? &#39;&#39; : hours += &#39;小时&#39;&#125;$&#123;minutes == 0 ? &#39;&#39; : minutes += &#39;分钟&#39;&#125;$&#123;seconds == 0 ? &#39;&#39; : seconds += &#39;秒&#39;&#125;$&#123;millis == 0 ? &#39;&#39; : millis += &#39;毫秒&#39;&#125;$&#123;nanos == 0 ? &#39;&#39; : nanos += &#39;纳秒&#39;&#125;
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://beanvalidation.org/2.0/spec/#builtinconstraints">参考约束说明</a> </p>
+
+      </section>
+    </article>
+    
+    <!-- disqus 评论框 start -->
+    <div class="comment">
+      <div id="disqus_thread"
+        class="disqus-thread">
+          <script src="https://giscus.app/client.js"
+                  data-repo="yaodwwy/giscus"
+                  data-repo-id="R_kgDOGeYRAg"
+                  data-category="General"
+                  data-category-id="DIC_kwDOGeYRAs4CAIVU"
+                  data-mapping="pathname"
+                  data-reactions-enabled="1"
+                  data-emit-metadata="1"
+                  data-theme="light"
+                  data-lang="zh-CN"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+      </div>
+    </div>
+    <!-- disqus 评论框 end -->
+    
+    
+  </div>
+  
+  <aside>
+    <div class="toc-container">
+      <h1>
+        目录
+      </h1>
+      <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">概念</span></a></li></ol>
+      </div>
+    </div>
+  </aside>
+    
+</main>
+<!-- disqus 公共JS代码
+
+
+
+  <footer>
+  <div class="copyright">
+    <p>
+      Copyright© 2019-2022 adbyte.cn All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="/lib/ScrollMagic.min.js"></script>
+
+
+<script src="/lib/lodash.min.js"></script>
+
+<script>
+  document.body.addEventListener('touchstart', function () { });
+
+  // 文章图片预览
+  $("article img").each(function () {
+    var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+    $(this).wrapAll(strA);
+  });
+
+  // 目录联动
+  let tocLinkList = $('.toc-link')
+
+  let controller = new ScrollMagic.Controller({
+    globalSceneOptions: {
+      triggerHook: 0.01
+    }
+  })
+
+  tocLinkList.each(function (index, elem) {
+    let href = $(this).attr("href");
+    let nextHref = tocLinkList.eq(index + 1).attr("href");
+    let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+    new ScrollMagic.Scene({ triggerElement: href })
+      .duration(height)
+      .setClassToggle(".toc [href='" + href + "']", 'active')
+      .addTo(controller)
+  })
+
+  window.addEventListener('load', function () {
+    // 目录联动 图片加载完成后从新计算
+    tocLinkList.each(function (index, elem) {
+      let href = $(this).attr("href");
+      let nextHref = tocLinkList.eq(index + 1).attr("href");
+      let height = href && nextHref ? $(nextHref).offset().top - $(href).offset().top : 0
+
+      new ScrollMagic.Scene({ triggerElement: href })
+        .duration(height)
+        .setClassToggle(".toc [href='" + href + "']", 'active')
+        .addTo(controller)
+    })
+  })
+</script>
+
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+
+</body>
+</html>

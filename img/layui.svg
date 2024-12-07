@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <text x="10" y="25" font-family="Arial,sans-serif"
+        font-weight="lighter" font-size="22" letter-spacing="-1.5">
+    <a fill="gray">L</a>
+    <a fill="rgb(95,184,120)">a</a>
+    <a fill="rgb(0,150,135)">y</a>
+    <a fill="rgb(0,170,237)">u</a>
+    <a fill="rgb(255,87,33)">i</a>
+  </text>
+</svg>
