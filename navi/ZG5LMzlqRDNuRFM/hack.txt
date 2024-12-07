@@ -1,1 +1,0 @@
-start https://github.com/Fndroid/clash_for_windows_pkg/issues/3891
